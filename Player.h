@@ -3,9 +3,10 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 
-#define GRAV 0.8
-#define CAP_SPEED 7
-#define PLAYER_SPEED 3
+#define GRAV 2
+#define CAP_SPEED 10
+#define PLAYER_SPEED 8
+#define PLAYER_JUMP_SPEED 30
 class Player: public BaseObject
 {
 public:
@@ -25,6 +26,8 @@ public:
 	void SetClip();
 	void DoPlayer(Map& map_data);
 	void CheckColli(Map& map_data);
+	void SetMapXY(const int map_x, const int map_y) {map_x_ = map_x; map_y_ = map_y;}
+	void CenterEntityOnMap(Map& map_data);
 private:
 	float x_val_;// velocity
 	float y_val_;
@@ -40,6 +43,9 @@ private:
 	int frame_cur_;
 	int status_; // L/R
 	bool on_ground_;
+
+	int map_x_;
+	int map_y_;
 };
 
 

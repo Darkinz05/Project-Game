@@ -7,7 +7,7 @@ and may not be redistributed without written permission.*/
 #include "BaseObject.h"
 #include "GameMap.h"
 #include "Player.h"
-
+#include "Timer.h"
 #undef main
 
 using namespace std;
@@ -71,6 +71,7 @@ void Close()
 }
 int main(int argc, char *argv[])
 {
+	Timer time;
 	if(Init() == false) return -1;
 	if(LoadBackground() == false) return -1;
 
@@ -83,8 +84,13 @@ int main(int argc, char *argv[])
 	player.SetClip();
 	bool quit = 0;
 	SDL_Event e;
+	BaseObject tes;
+	tes.LoadImg("Character/knight_right.png", g_screen);
+
 	while(!quit)
 	{
+		time.start();
+
 		while(SDL_PollEvent(&e) != 0)
 		{
 			if(e.type == SDL_QUIT)
@@ -103,11 +109,24 @@ int main(int argc, char *argv[])
 
 		game_map.DrawMap(g_screen);
 		Map map_data = game_map.GetMap();
+		//tes.Render(g_screen);
 
+		player.SetMapXY(map_data.start_x_, map_data.start_y_);
 		player.DoPlayer(map_data);
 		player.Show(g_screen);
 
+		game_map.SetMap(map_data);
+		game_map.DrawMap(g_screen);
 		SDL_RenderPresent(g_screen);
+
+		int pass_tick = time.getTicks();
+
+		int time_per_frame = 1000/fps;//ms
+
+		if(pass_tick < time_per_frame)
+		{
+			SDL_Delay(time_per_frame - pass_tick);
+		}
 	}
 
 	Close();

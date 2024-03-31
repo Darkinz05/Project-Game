@@ -50,6 +50,8 @@
 		<Unit filename="GameMap.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
+		<Unit filename="Timer.cpp" />
+		<Unit filename="Timer.h" />
 		<Unit filename="main.cpp" />
 		<Extensions />
 	</Project>

@@ -24,7 +24,7 @@ bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen)
 	SDL_Surface* load_surface = IMG_Load(path.c_str());
 	if(load_surface != NULL)
 	{
-		SDL_SetColorKey(load_surface, SDL_TRUE, SDL_MapRGB(load_surface->format, keyR-1, keyG-1, keyB));
+		SDL_SetColorKey(load_surface, SDL_TRUE, SDL_MapRGB(load_surface->format, keyR, keyG, keyB));
 		new_texture = SDL_CreateTextureFromSurface(screen, load_surface);
 		if(new_texture != NULL)
 		{

@@ -22,6 +22,7 @@ const int keyB = 146;
 #define MAX_MAP_X 400
 #define MAX_MAP_Y 10
 
+const int fps = 60;
 struct Input
 {
 	int left_;

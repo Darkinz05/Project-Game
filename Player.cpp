@@ -16,6 +16,9 @@ Player::Player()
 	input_type_.up_ = 0;
 	input_type_.down_ = 0;
 	input_type_.jump_ = 0;
+	map_x_ = 0;
+	map_y_ = 0;
+
 }
 
 Player::~Player()
@@ -60,20 +63,24 @@ void Player::Show(SDL_Renderer* des)
 	{
 		LoadImg("Character/knight_right.png", des);
 	}
-	width_frame_ = 100;
-	height_frame_ = 100;
 	if(input_type_.left_ == 1 || input_type_.right_ ==1)
 	{
 		frame_cur_++;//move
 	}
 	else frame_cur_ = 0;//idle
 	if(frame_cur_ >= 8) frame_cur_-=8;
-	rect_.x = x_pos_;
-	rect_.y = y_pos_;
-	SDL_Rect* current_clip = &clip[frame_cur_];// * = &
-	//cout<<width_frame_<<" "<<height_frame_<<"\n";
+
+	rect_.x = x_pos_ - map_x_;
+	//cout<<x_pos_<<" "<<map_x_<<"\n";
+	rect_.y = y_pos_ - map_y_;
+
+	width_frame_ = 80;
+	height_frame_ = 80;
+	SDL_Rect* current_clip = &clip[frame_cur_];// * = &//cout<<width_frame_<<" "<<height_frame_<<"\n";
+
 	SDL_Rect renderQuad = {rect_.x, rect_.y, width_frame_, height_frame_};// tao tu hu khong -> ko dung pointer
 	//cout<<rect_.x<<" "<<rect_.y<<" "<<width_frame_<<" "<<height_frame_<<" "<<frame_cur_<<"\n";
+
 	SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
 }
 
@@ -92,6 +99,9 @@ void Player::HandleInputAction(SDL_Event e, SDL_Renderer* screen)
 			status_ = WALK_LEFT;
 			input_type_.left_ = 1;
 			input_type_.right_ = 0;
+			break;
+		case SDLK_UP:
+			input_type_.jump_ = 1;
 			break;
 		default:
 			break;
@@ -112,6 +122,7 @@ void Player::HandleInputAction(SDL_Event e, SDL_Renderer* screen)
 			break;
 		}
 	}
+
 }
 
 void Player::DoPlayer(Map& map_data)
@@ -133,7 +144,17 @@ void Player::DoPlayer(Map& map_data)
 		x_val_ += PLAYER_SPEED;
 	}
 
+	if(input_type_.jump_ == 1)
+	{
+		if(on_ground_ == 1)
+		{
+			y_val_ = -PLAYER_JUMP_SPEED;
+		}
+		on_ground_ = 0;
+		input_type_.jump_ = 0;
+	}
 	CheckColli(map_data);
+	CenterEntityOnMap(map_data);
 }
 
 void Player::CheckColli(Map& map_data)
@@ -181,13 +202,17 @@ void Player::CheckColli(Map& map_data)
 
 	if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y)
 	{
-		if(y_val_ > 0) //moving to left
+		if(y_val_ > 0)
 		{
 			if(map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0)
 			{
 				y_pos_ = y2*TILE_SIZE - height_frame_ - 1;
 				y_val_ = 0;
 				on_ground_ = 1;
+			}
+			else
+			{
+				on_ground_ = 0;
 			}
 		}
 		else if(y_val_ < 0)
@@ -208,5 +233,30 @@ void Player::CheckColli(Map& map_data)
 	{
 		//cout<<1;
 		x_pos_ = map_data.max_x_ - width_frame_ - 1;// max x la diem pixel cuoi cuar map
+	}
+
+	cout<<on_ground_<<" ";
+}
+
+void Player::CenterEntityOnMap(Map& map_data)
+{
+	map_data.start_x_ = x_pos_ + width_frame_/2 - (SCREEN_WIDTH/2) + 50;// return to cemter
+	if(map_data.start_x_ < 0)
+	{
+		map_data.start_x_ = 0;
+	}
+	else if(map_data.start_x_ + SCREEN_WIDTH >= map_data.max_x_)
+	{
+		map_data.start_x_ = map_data.max_x_ - SCREEN_WIDTH;
+	}
+
+	map_data.start_y_ = y_pos_ + height_frame_/2 - (SCREEN_HEIGHT/2);
+	if(map_data.start_y_ < 0)
+	{
+		map_data.start_y_ = 0;
+	}
+	else if(map_data.start_y_ + SCREEN_HEIGHT >= map_data.max_y_)
+	{
+		map_data.start_y_ = map_data.max_y_ - SCREEN_HEIGHT;
 	}
 }
