@@ -7,10 +7,12 @@ class BaseObject
 public:
 	BaseObject();
 	~BaseObject();
-	void SetRect(const int& x, const int& y)
+	void SetRect(const int& x, const int& y, const int& w, const int& h)
 	{
 		rect_.x=x;
 		rect_.y=y;
+		rect_.w=w;
+		rect_.h=h;
 	}
 
 	SDL_Rect GetRect() const {return rect_;}

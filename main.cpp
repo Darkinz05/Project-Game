@@ -66,8 +66,6 @@ void Close()
 
 	IMG_Quit();
 	SDL_Quit();
-
-
 }
 int main(int argc, char *argv[])
 {
@@ -78,17 +76,15 @@ int main(int argc, char *argv[])
 	GameMap game_map;
 	game_map.LoadMap("map/map01.dat");
 	game_map.LoadTiles(g_screen);
-	cout<<1;
 	Player player;
 	player.LoadImg("Character/knight_right.png", g_screen);
 	player.SetClip();
 	bool quit = 0;
 	SDL_Event e;
-	BaseObject tes;
-	tes.LoadImg("Character/knight_right.png", g_screen);
 
 	while(!quit)
 	{
+		//cout<<1<<" ";
 		time.start();
 
 		while(SDL_PollEvent(&e) != 0)
@@ -99,7 +95,6 @@ int main(int argc, char *argv[])
 			}
 
 			player.HandleInputAction(e, g_screen);
-
 		}
 
 		SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
@@ -110,13 +105,12 @@ int main(int argc, char *argv[])
 		game_map.DrawMap(g_screen);
 		Map map_data = game_map.GetMap();
 		//tes.Render(g_screen);
-
 		player.SetMapXY(map_data.start_x_, map_data.start_y_);
 		player.DoPlayer(map_data);
 		player.Show(g_screen);
 
 		game_map.SetMap(map_data);
-		game_map.DrawMap(g_screen);
+		//game_map.DrawMap(g_screen);
 		SDL_RenderPresent(g_screen);
 
 		int pass_tick = time.getTicks();
@@ -127,6 +121,7 @@ int main(int argc, char *argv[])
 		{
 			SDL_Delay(time_per_frame - pass_tick);
 		}
+
 	}
 
 	Close();

@@ -18,9 +18,9 @@ const int keyR = 144;
 const int keyG = 132;
 const int keyB = 146;
 
-#define TILE_SIZE 64
+#define TILE_SIZE 80
 #define MAX_MAP_X 400
-#define MAX_MAP_Y 10
+#define MAX_MAP_Y 13
 
 const int fps = 60;
 struct Input

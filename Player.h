@@ -4,7 +4,7 @@
 #include "BaseObject.h"
 
 #define GRAV 2
-#define CAP_SPEED 10
+#define CAP_SPEED 20
 #define PLAYER_SPEED 8
 #define PLAYER_JUMP_SPEED 30
 class Player: public BaseObject

@@ -71,6 +71,7 @@ void GameMap::DrawMap(SDL_Renderer* screen)
 
 	y1 = (game_map_.start_y_ % TILE_SIZE)*-1;
 	y2 = y1 + SCREEN_HEIGHT + (y1 == 0 ? 0:TILE_SIZE);//tuong tu
+
 	//render
 	// i,j: start pos pixel cua 1 o
 	// mapx,mapy: index 1 o
@@ -82,11 +83,15 @@ void GameMap::DrawMap(SDL_Renderer* screen)
 			int val = game_map_.tile[map_y][map_x];
 			if(val)
 			{
-				tile_mat[val].SetRect(j,i);
+				tile_mat[val].SetRect(j,i,TILE_SIZE,TILE_SIZE);
+
 				tile_mat[val].Render(screen);
+
 			}
 			map_x++;
+
 		}
 		map_y++;
 	}
+
 }
