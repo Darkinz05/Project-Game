@@ -3,10 +3,10 @@
 #include "CommonFunc.h"
 #include "BaseObject.h"
 
-#define GRAV 2
+#define GRAV 1
 #define CAP_SPEED 20
 #define PLAYER_SPEED 8
-#define PLAYER_JUMP_SPEED 30
+#define PLAYER_JUMP_SPEED 19
 class Player: public BaseObject
 {
 public:
@@ -22,7 +22,7 @@ public:
 	bool LoadImg(string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua
 	void Show(SDL_Renderer* des);
 
-	void HandleInputAction(SDL_Event e, SDL_Renderer* screen);
+	void HandleInputAction(SDL_Event e);
 	void SetClip();
 	void DoPlayer(Map& map_data);
 	void CheckColli(Map& map_data);

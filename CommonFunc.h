@@ -40,7 +40,7 @@ struct Map
 	int max_y_;
 
 	int tile[MAX_MAP_Y][MAX_MAP_X];
-	char* file_name_;
+	string file_name_;
 
 };
 #endif // COMMON_FUNC_H

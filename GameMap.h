@@ -19,7 +19,7 @@ public:
 	GameMap(){;}
 	~GameMap(){;}
 
-	void LoadMap(char* name);
+	void LoadMap(string name);
 	void LoadTiles(SDL_Renderer* screen);
 	void DrawMap(SDL_Renderer* screen);
 	Map GetMap() const {return game_map_;}

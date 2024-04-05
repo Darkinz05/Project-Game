@@ -1,6 +1,6 @@
 #include "GameMap.h"
 
-void GameMap::LoadMap(char* name)
+void GameMap::LoadMap(string name)
 {
 	std::ifstream fin(name);
 

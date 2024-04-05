@@ -50,7 +50,8 @@ void Player::SetClip()
 			clip[i].h = height_frame_;
 		}
 	}
-
+	width_frame_ = TILE_SIZE-1;
+	height_frame_ = TILE_SIZE-1;
 }
 
 void Player::Show(SDL_Renderer* des)
@@ -75,8 +76,8 @@ void Player::Show(SDL_Renderer* des)
 	//cout<<x_pos_<<" "<<map_x_<<"\n";
 	rect_.y = y_pos_ - map_y_;
 
-	width_frame_ = 100;
-	height_frame_ = 100;
+	width_frame_ = TILE_SIZE-1;
+	height_frame_ = TILE_SIZE-1;
 	SDL_Rect* current_clip = &clip[frame_cur_/4];// * = &//cout<<width_frame_<<" "<<height_frame_<<"\n";
 
 	SDL_Rect renderQuad = {rect_.x, rect_.y, width_frame_, height_frame_};// tao tu hu khong -> ko dung pointer
@@ -85,7 +86,7 @@ void Player::Show(SDL_Renderer* des)
 	SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
 }
 
-void Player::HandleInputAction(SDL_Event e, SDL_Renderer* screen)
+void Player::HandleInputAction(SDL_Event e)
 {
 	if(e.type == SDL_KEYDOWN)
 	{
@@ -179,7 +180,7 @@ void Player::CheckColli(Map& map_data)
 		{
 			if(map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0)
 			{
-				x_pos_ = x2*TILE_SIZE - width_frame_ - 1;
+				x_pos_ = x2*TILE_SIZE - width_frame_ ;
 				x_val_ = 0;
 			}
 		}
@@ -201,18 +202,19 @@ void Player::CheckColli(Map& map_data)
 
 	y1 = (y_pos_+y_val_) / TILE_SIZE;
 	y2 = (y_pos_+y_val_+height_frame_-1) / TILE_SIZE;
-	//cout<<y_pos_<<" ";
+
 	if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y)
 	{
 		if(y_val_ > 0)
 		{
 			if(map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0)
 			{
-				//cout<<1<<" "<<y_pos_<<" ";
-				y_pos_ = y2*TILE_SIZE - height_frame_ - 1;
+
+				y_pos_ = y2*TILE_SIZE - height_frame_;
+
 				y_val_ = 0;
 				on_ground_ = 1;
-				//cout<<y_pos_<<" ";
+
 			}
 			else
 			{
@@ -231,7 +233,6 @@ void Player::CheckColli(Map& map_data)
 
 	x_pos_ += x_val_;
 	y_pos_ += y_val_;
-	//cout<<y_pos_<<"\n";
 	//cout<<x_pos_<<" "<<y_pos_<<"\n";
 
 	if(x_pos_ < 0) x_pos_ = 0;

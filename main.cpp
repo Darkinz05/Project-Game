@@ -8,6 +8,7 @@ and may not be redistributed without written permission.*/
 #include "GameMap.h"
 #include "Player.h"
 #include "Timer.h"
+#include "Button.h"
 #undef main
 
 using namespace std;
@@ -15,7 +16,12 @@ using namespace std;
 SDL_Window* g_window;
 SDL_Renderer* g_screen;
 BaseObject g_background;
-
+enum GAMESCENE
+{
+	MENU = 0,
+	SUB1 = 1,
+	TEST = 2
+};
 bool Init()
 {
 	bool success = 1;
@@ -67,51 +73,114 @@ void Close()
 	IMG_Quit();
 	SDL_Quit();
 }
+
+Player player;
+GameMap game_map;
+
+BaseObject menu_background;
+Button play_button;
+bool LoadMedia()
+{
+	if(LoadBackground() == false) return -1;
+
+	game_map.LoadMap("map/map01.dat");
+	game_map.LoadTiles(g_screen);
+
+	player.LoadImg("Character/knight_right.png", g_screen);
+	player.SetClip();// 8
+
+	menu_background.LoadImg("menu/Menu_background.png", g_screen);
+	play_button.LoadImg("menu/Button_up.png", g_screen);
+}
+
+int scene = 0;
+void ChangeScene()
+{
+	switch(scene)
+	{
+	case MENU:
+		if(play_button.GetAdvance()) scene = SUB1;
+		break;
+	case SUB1:
+
+		break;
+	}
+}
 int main(int argc, char *argv[])
 {
 	Timer time;
 	if(Init() == false) return -1;
-	if(LoadBackground() == false) return -1;
-
-	GameMap game_map;
-	game_map.LoadMap("map/map01.dat");
-	game_map.LoadTiles(g_screen);
-	Player player;
-	player.LoadImg("Character/knight_right.png", g_screen);
-	player.SetClip();
+	LoadMedia();
 	bool quit = 0;
 	SDL_Event e;
-
+	int next_scene = 0;
 	while(!quit)
 	{
 		//cout<<1<<" ";
 		time.start();
-
-		while(SDL_PollEvent(&e) != 0)
+		//event
+		switch(scene)
 		{
-			if(e.type == SDL_QUIT)
+		case MENU:
+			while(SDL_PollEvent(&e) != 0)
 			{
-				quit = true;
+				if(e.type == SDL_QUIT)
+				{
+					quit = true;
+				}
+				play_button.HandleInput(e);
 			}
-
-			player.HandleInputAction(e, g_screen);
+			break;
+		case SUB1:
+			while(SDL_PollEvent(&e) != 0)
+			{
+				if(e.type == SDL_QUIT)
+				{
+					quit = true;
+				}
+				player.HandleInputAction(e);
+			}
+			break;
 		}
 
+		//logic
+		switch(scene)
+		{
+		case MENU:
+
+			break;
+		case SUB1:
+			break;
+		}
+
+		ChangeScene();
+		//render
 		SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
 		SDL_RenderClear(g_screen);
+		switch(scene)
+		{
+		case MENU:
+			menu_background.SetRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+			menu_background.Render(g_screen);
+			play_button.Show(g_screen);
+			SDL_RenderPresent(g_screen);
+			break;
+		case SUB1:
+			g_background.Render(g_screen);
 
-		g_background.Render(g_screen);
+			game_map.DrawMap(g_screen);
+			Map map_data = game_map.GetMap();
+			//tes.Render(g_screen);
+			player.SetMapXY(map_data.start_x_, map_data.start_y_);
+			player.DoPlayer(map_data);
+			player.Show(g_screen);
 
-		game_map.DrawMap(g_screen);
-		Map map_data = game_map.GetMap();
-		//tes.Render(g_screen);
-		player.SetMapXY(map_data.start_x_, map_data.start_y_);
-		player.DoPlayer(map_data);
-		player.Show(g_screen);
+			game_map.SetMap(map_data);
+			game_map.DrawMap(g_screen);
+			SDL_RenderPresent(g_screen);
+			break;
+		}
 
-		game_map.SetMap(map_data);
-		//game_map.DrawMap(g_screen);
-		SDL_RenderPresent(g_screen);
 
 		int pass_tick = time.getTicks();
 
@@ -121,7 +190,6 @@ int main(int argc, char *argv[])
 		{
 			SDL_Delay(time_per_frame - pass_tick);
 		}
-
 	}
 
 	Close();

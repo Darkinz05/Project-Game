@@ -2,7 +2,7 @@
 1710065224 source:c:\users\dell\documents\code\ltnc\project-game\commonfunc.cpp
 	"CommonFunc.h"
 
-1712119691 c:\users\dell\documents\code\ltnc\project-game\commonfunc.h
+1712339170 c:\users\dell\documents\code\ltnc\project-game\commonfunc.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -424,12 +424,13 @@
 
 1710066933 source:c:\users\dell\documents\code\ltnc\project-game\baseobj.cpp
 
-1712126350 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
+1712339612 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
 	"CommonFunc.h"
 	"BaseObject.h"
 	"GameMap.h"
 	"Player.h"
 	"Timer.h"
+	"Button.h"
 
 1710327181 c:\users\dell\documents\code\ltnc\project-game\defs.h
 
@@ -464,24 +465,24 @@
 	<stdio.h>
 	<string>
 
-1712116001 c:\users\dell\documents\code\ltnc\project-game\baseobject.h
+1712337892 c:\users\dell\documents\code\ltnc\project-game\baseobject.h
 	"CommonFunc.h"
 
-1712119354 source:c:\users\dell\documents\code\ltnc\project-game\gamemap.cpp
+1712338957 source:c:\users\dell\documents\code\ltnc\project-game\gamemap.cpp
 	"GameMap.h"
 
-1711789314 c:\users\dell\documents\code\ltnc\project-game\gamemap.h
+1712339031 c:\users\dell\documents\code\ltnc\project-game\gamemap.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
 1711787054 source:c:\users\dell\documents\code\ltnc\project-game\baseobject.cpp
 	"BaseObject.h"
 
-1712127324 c:\users\dell\documents\code\ltnc\project-game\player.h
+1712339193 c:\users\dell\documents\code\ltnc\project-game\player.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1712127324 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
+1712338435 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
 	"CommonFunc.h"
 	"Player.h"
 
@@ -490,4 +491,13 @@
 	"CommonFunc.h"
 
 1711806798 c:\users\dell\documents\code\ltnc\project-game\timer.h
+
+1712129382 source:c:\users\dell\documents\code\ltnc\project-game\enemy1.cpp
+
+1712340047 source:c:\users\dell\documents\code\ltnc\project-game\button.cpp
+	"Button.h"
+
+1712339572 c:\users\dell\documents\code\ltnc\project-game\button.h
+	"CommonFunc.h"
+	"BaseObject.h"
 
