@@ -8,7 +8,7 @@ public:
 	Button();
 	~Button();
 	void HandleInput(SDL_Event event);
-	void Show(SDL_Renderer* des);
+	void Show(SDL_Renderer* des, TTF_Font* font, int type, string text);
 	bool GetAdvance() {return advance;}
 	bool SetAdvance() {advance = 0;}
 private:

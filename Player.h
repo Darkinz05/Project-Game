@@ -5,7 +5,7 @@
 
 #define GRAV 1
 #define CAP_SPEED 20
-#define PLAYER_SPEED 8
+#define PLAYER_SPEED 6
 #define PLAYER_JUMP_SPEED 19
 class Player: public BaseObject
 {
@@ -18,10 +18,12 @@ public:
 		WALK_RIGHT = 0,
 		WALK_LEFT = 1
 	};
-
+	SDL_Rect Box()
+	{
+		return {(int)x_pos_ +16, (int)y_pos_ +8, 16, 28 };
+	}
 	bool LoadImg(string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua
 	void Show(SDL_Renderer* des);
-
 	void HandleInputAction(SDL_Event e);
 	void SetClip();
 	void DoPlayer(Map& map_data);

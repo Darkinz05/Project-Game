@@ -14,7 +14,7 @@ public:
 		rect_.w=w;
 		rect_.h=h;
 	}
-	void SetRect(const int& x, const int& y)
+	void SetPos(const int& x, const int& y)
 	{
 		rect_.x = x;
 		rect_.y = y;
@@ -23,7 +23,7 @@ public:
 	SDL_Texture* GetObject() const {return p_object_;}
 
 	virtual bool LoadImg(std::string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua trong cac lop con
-
+	bool LoadTTF(std::string text, SDL_Renderer* screen, TTF_Font* font, SDL_Color text_color);
 	void Render(SDL_Renderer* des,const SDL_Rect* clip = NULL);
 	void Free();
 

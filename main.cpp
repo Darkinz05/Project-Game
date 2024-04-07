@@ -39,6 +39,7 @@ bool Init()
 	else
 	{
 		g_screen = SDL_CreateRenderer(g_window, -1, SDL_RENDERER_ACCELERATED);
+		SDL_SetRenderDrawBlendMode(g_screen, SDL_BLENDMODE_BLEND);
 		if(g_screen == NULL)
 		{
 			success = false;
@@ -48,6 +49,11 @@ bool Init()
 			SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
 			int imgFlags = IMG_INIT_PNG;
 			if(!(IMG_Init(imgFlags)&&imgFlags))
+			{
+				success = 0;
+			}
+
+			if(TTF_Init() == -1)
 			{
 				success = 0;
 			}
@@ -79,18 +85,23 @@ GameMap game_map;
 
 BaseObject menu_background;
 Button play_button;
+
+TTF_Font* g_font = NULL;
 bool LoadMedia()
 {
-	if(LoadBackground() == false) return -1;
+	g_font = TTF_OpenFont("Corda_W01_Medium.ttf", 80);
+	if(LoadBackground() == false) return 0;
 
-	game_map.LoadMap("map/map01.dat");
+	//game_map.LoadMap("map/map01.dat");
+	game_map.LoadMap("map/map11.txt");
 	game_map.LoadTiles(g_screen);
 
 	player.LoadImg("Character/knight_right.png", g_screen);
 	player.SetClip();// 8
 
 	menu_background.LoadImg("menu/Menu_background.png", g_screen);
-	play_button.LoadImg("menu/Button_up.png", g_screen);
+	play_button.LoadTTF("Play", g_screen, g_font, button_out);
+	return 1;
 }
 
 int scene = 0;
@@ -160,25 +171,38 @@ int main(int argc, char *argv[])
 		switch(scene)
 		{
 		case MENU:
-			menu_background.SetRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-			menu_background.Render(g_screen);
-			play_button.Show(g_screen);
-			SDL_RenderPresent(g_screen);
-			break;
+			{
+				menu_background.SetRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+				menu_background.Render(g_screen);
+
+				SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
+				SDL_Rect box_ = {SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2 - 250, 400, 500};
+				SDL_RenderFillRect(g_screen, &box_);
+
+				play_button.SetPos(SCREEN_WIDTH/2 - play_button.GetRect().w/2, 110);
+				play_button.Show(g_screen, g_font, 1, "Play");
+
+				SDL_RenderPresent(g_screen);
+				break;
+			}
+
 		case SUB1:
-			g_background.Render(g_screen);
+			{
+				g_background.Render(g_screen);
 
-			game_map.DrawMap(g_screen);
-			Map map_data = game_map.GetMap();
-			//tes.Render(g_screen);
-			player.SetMapXY(map_data.start_x_, map_data.start_y_);
-			player.DoPlayer(map_data);
-			player.Show(g_screen);
+				game_map.DrawMap(g_screen);
+				Map map_data = game_map.GetMap();
+				//tes.Render(g_screen);
+				player.SetMapXY(map_data.start_x_, map_data.start_y_);
+				player.DoPlayer(map_data);
+				player.Show(g_screen);
 
-			game_map.SetMap(map_data);
-			game_map.DrawMap(g_screen);
-			SDL_RenderPresent(g_screen);
-			break;
+				game_map.SetMap(map_data);
+				game_map.DrawMap(g_screen);
+				SDL_RenderPresent(g_screen);
+				break;
+			}
+
 		}
 
 

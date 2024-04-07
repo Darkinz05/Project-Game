@@ -20,6 +20,7 @@ void Button::HandleInput(SDL_Event event)
 		{
 			is_hovered = !is_hovered;
 		}
+		cout<<event.motion.x<<" "<<event.motion.y<<"\n";
 	}
 	if(press == 1 && event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && is_hovered)
 	{
@@ -30,12 +31,21 @@ void Button::HandleInput(SDL_Event event)
 	{
 		press = 1;
 	}
+
 }
 
-void Button::Show(SDL_Renderer* des)
+void Button::Show(SDL_Renderer* des, TTF_Font* font, int type, string text)
 {
-	if(press) BaseObject::LoadImg("menu/Button_down.png",des);
-	else BaseObject::LoadImg("menu/Button_up.png", des);
-	BaseObject::SetRect(0,0);
+//	if(press) BaseObject::LoadImg("menu/Button_down.png",des);
+//	else BaseObject::LoadImg("menu/Button_up.png", des);
+	if(is_hovered == 0)
+	{
+		BaseObject::LoadTTF(text, des, font, button_out);
+	}
+	else
+	{
+		BaseObject::LoadTTF(text, des, font, button_in);
+	}
+
 	BaseObject::Render(des);
 }
