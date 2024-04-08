@@ -20,7 +20,7 @@ const int keyB = 153;
 
 #define TILE_SIZE 64
 #define MAX_MAP_X 20
-#define MAX_MAP_Y 10
+#define MAX_MAP_Y 14
 
 const SDL_Color button_out = {0,0,0,255};
 const SDL_Color button_in = {255,255,211,255};

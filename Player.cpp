@@ -4,8 +4,8 @@
 Player::Player()
 {
 	frame_cur_ = 0;
-	x_pos_ = 200;
-	y_pos_ = 200;
+	x_pos_ = 400;
+	y_pos_ = 400;
 	x_val_ = 0;
 	y_val_ = 0;
 	width_frame_ = 0;
@@ -33,8 +33,8 @@ bool Player::LoadImg(string path, SDL_Renderer* screen)
 	bool ret = BaseObject::LoadImg(path, screen);
 	if(ret == true)
 	{
-		rect_.h = 74;
-		rect_.w = 100;
+//		rect_.h = 74;
+//		rect_.w = 100;
 		width_frame_ = rect_.w;
 		height_frame_ = rect_.h;
 	}
@@ -97,10 +97,12 @@ void Player::Show(SDL_Renderer* des)
 		{
 			input_type_.attack_ = 0;
 			frame_cur_ = 0;
+			pro_attack++;
+			if(pro_attack == 3) pro_attack = 0;
 		}
 		//cout<<frame_cur_<<"     ";
-		string path = "Character/adventurer-attack1-0" + to_string(frame_cur_/3) + ".png";
-		LoadImg(path, des);
+		string path = "Character/adventurer-attack" + to_string(pro_attack+1) + "-0" + to_string(frame_cur_/3) + ".png";
+		cout<<LoadImg(path, des);
 	}
 	else
 	{
@@ -187,10 +189,10 @@ void Player::HandleInputAction(SDL_Event e)
 		}
 	}
 
-	if(e.type == SDL_MOUSEMOTION)
-	{
-		//cout<<event.motion.x<<" "<<event.motion.y<<"\n";
-	}
+//	if(e.type == SDL_MOUSEMOTION)
+//	{
+//		cout<<1<<" "<<e.motion.x<<" "<<e.motion.y<<"\n";
+//	}
 	//cout<<status_<<"\n";
 }
 
@@ -244,22 +246,27 @@ void Player::CheckColli(Map& map_data)
 	int x1 = 0, x2 = 0;
 	int y1 = 0, y2 = 0;
 	//cout<<x_val_<<" "<<y_val_<<"\n";
+	//cout<<x_pos_<<" "<<y_pos_<<"      ";
 	//Check horizontal: x
-	int height_min = height_frame_<TILE_SIZE ? height_frame_:TILE_SIZE;
+	int height_min = Box().h<TILE_SIZE ? Box().h:TILE_SIZE;
+	//cout<<rect_.x<<" "<<rect_.y<<" "<<rect_.w<<" "<<rect_.h<<"\n";
+	x_pos_ += x_val_;
+	y_pos_ += y_val_;
+	x1 = (Box().x) / TILE_SIZE;// o nao cua map //trai
+	x2 = (Box().x+Box().w-1) / TILE_SIZE; //phai cuar nhan vat
 
-	x1 = (x_pos_+x_val_) / TILE_SIZE;// o nao cua map //trai
-	x2 = (x_pos_+x_val_+width_frame_-1) / TILE_SIZE; //phai cuar nhan vat
-
-	y1 = (y_pos_) / TILE_SIZE;
-	y2 = (y_pos_+height_min-1) / TILE_SIZE;
-
+	y1 = (Box().y) / TILE_SIZE;
+	y2 = (Box().y+height_min-1) / TILE_SIZE;
+	//cout<<Box().x<<" "<<Box().y<<"\n";
+	//cout<<x1<<" "<<x2<<" "<<y1<<" "<<y2<<"\n";
 	if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y)
 	{
 		if(x_val_ > 0) //moving to right
 		{
 			if(map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0)
 			{
-				x_pos_ = x2*TILE_SIZE - width_frame_ ;
+				//Box().x = x2*TILE_SIZE - width_frame_ ;
+				x_pos_ = x2*TILE_SIZE - Box().w - 60;
 				x_val_ = 0;
 			}
 		}
@@ -267,31 +274,31 @@ void Player::CheckColli(Map& map_data)
 		{
 			if(map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0)
 			{
-				x_pos_ = (x1+1)*TILE_SIZE;
+				//Box().x = (x1+1)*TILE_SIZE;
+				x_pos_ = (x1+1)*TILE_SIZE -60;
 				x_val_ = 0;
 			}
 		}
+
 	}
 
 	//check vertical
-	int width_min_ = width_frame_<TILE_SIZE ? width_frame_:TILE_SIZE;
+	int width_min_ = Box().w<TILE_SIZE ? Box().w:TILE_SIZE;
 
-	x1 = (x_pos_) / TILE_SIZE;// o nao cua map //trai
-	x2 = (x_pos_+width_min_-1) / TILE_SIZE; //phai cuar nhan vat
+	x1 = (Box().x) / TILE_SIZE;// o nao cua map //trai
+	x2 = (Box().x+width_min_-1) / TILE_SIZE; //phai cuar nhan vat
 
-	y1 = (y_pos_+y_val_) / TILE_SIZE;
-	y2 = (y_pos_+y_val_+height_frame_-1) / TILE_SIZE;
+	y1 = (Box().y) / TILE_SIZE;
+	y2 = (Box().y+Box().h-1) / TILE_SIZE;
 
 	if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y)
 	{
 		if(y_val_ > 0)
 		{
-
 			if(map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0)
 			{
-
-				y_pos_ = y2*TILE_SIZE - height_frame_;
-
+				//y_pos_ = y2*TILE_SIZE - height_frame_;
+				y_pos_ = y2*TILE_SIZE - Box().h - 22;
 				y_val_ = 0;
 				on_ground_ = 1;
 			}
@@ -304,15 +311,15 @@ void Player::CheckColli(Map& map_data)
 		{
 			if(map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0)
 			{
-				y_pos_ = (y1+1)*TILE_SIZE;
+				//y_pos_ = (y1+1)*TILE_SIZE;
+				y_pos_ = (y1+1)*TILE_SIZE - 22;
 				y_val_ = 0;
 			}
 		}
 	}
-
-	x_pos_ += x_val_;
-	y_pos_ += y_val_;
 	//cout<<x_pos_<<" "<<y_pos_<<"\n";
+
+
 
 	if(x_pos_ < 0) x_pos_ = 0;
 	else if(x_pos_ + width_frame_ > map_data.max_x_)

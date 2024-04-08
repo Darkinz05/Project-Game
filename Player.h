@@ -7,7 +7,7 @@
 #define CAP_SPEED 20
 #define PLAYER_SPEED 8
 #define PLAYER_JUMP_SPEED 20
-const int num_sprite[]={4,6,4,2,5};
+const int num_sprite[]={4,6,4,2,6};
 class Player: public BaseObject
 {
 public:
@@ -29,7 +29,7 @@ public:
 	};
 	SDL_Rect Box()
 	{
-		return {(int)(x_pos_ + 0.4*rect_.w), (int)(y_pos_ +0.2*rect_.h), 28, 87 };
+		return {(int)(x_pos_ + 60), (int)(y_pos_ + 22), 30, 86 };
 	}
 	bool LoadImg(string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua
 	void Show(SDL_Renderer* des);
@@ -61,6 +61,7 @@ public:
 	int map_y_;
 
 	int can_attack;
+	int pro_attack;
 };
 
 

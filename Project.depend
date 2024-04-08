@@ -2,7 +2,7 @@
 1710065224 source:c:\users\dell\documents\code\ltnc\project-game\commonfunc.cpp
 	"CommonFunc.h"
 
-1712552719 c:\users\dell\documents\code\ltnc\project-game\commonfunc.h
+1712600280 c:\users\dell\documents\code\ltnc\project-game\commonfunc.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -424,7 +424,7 @@
 
 1710066933 source:c:\users\dell\documents\code\ltnc\project-game\baseobj.cpp
 
-1712552348 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
+1712598883 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
 	"CommonFunc.h"
 	"BaseObject.h"
 	"GameMap.h"
@@ -478,11 +478,11 @@
 1712420631 source:c:\users\dell\documents\code\ltnc\project-game\baseobject.cpp
 	"BaseObject.h"
 
-1712588061 c:\users\dell\documents\code\ltnc\project-game\player.h
+1712600788 c:\users\dell\documents\code\ltnc\project-game\player.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1712588042 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
+1712600966 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
 	"CommonFunc.h"
 	"Player.h"
 

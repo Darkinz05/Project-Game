@@ -181,10 +181,10 @@ int main(int argc, char *argv[])
 				menu_background.Render(g_screen);
 
 				SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
-				SDL_Rect box_ = {SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2 - 250, 400, 500};
+				SDL_Rect box_ = {SCREEN_WIDTH/2 - 200, 0, 400, 1000};
 				SDL_RenderFillRect(g_screen, &box_);
 
-				play_button.SetPos(SCREEN_WIDTH/2 - play_button.GetRect().w/2, 110);
+				play_button.SetPos(SCREEN_WIDTH/2 - play_button.GetRect().w/2, 300);
 				play_button.Show(g_screen, g_font, 1, "Play");
 
 				SDL_RenderPresent(g_screen);
