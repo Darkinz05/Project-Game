@@ -20,7 +20,7 @@ void Button::HandleInput(SDL_Event event)
 		{
 			is_hovered = !is_hovered;
 		}
-		cout<<event.motion.x<<" "<<event.motion.y<<"\n";
+		//cout<<event.motion.x<<" "<<event.motion.y<<"\n";
 	}
 	if(press == 1 && event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT && is_hovered)
 	{

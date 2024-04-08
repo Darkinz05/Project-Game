@@ -11,6 +11,7 @@ Player::Player()
 	width_frame_ = 0;
 	height_frame_ = 0;
 	status_ = -1;
+	pre_status_ = -2;
 	input_type_.left_ = 0;
 	input_type_.right_ = 0;
 	input_type_.up_ = 0;
@@ -18,7 +19,8 @@ Player::Player()
 	input_type_.jump_ = 0;
 	map_x_ = 0;
 	map_y_ = 0;
-
+	save_dir = LEFT;
+	can_attack = 1;
 }
 
 Player::~Player()
@@ -31,7 +33,9 @@ bool Player::LoadImg(string path, SDL_Renderer* screen)
 	bool ret = BaseObject::LoadImg(path, screen);
 	if(ret == true)
 	{
-		width_frame_ = rect_.w/8;
+		rect_.h = 74;
+		rect_.w = 100;
+		width_frame_ = rect_.w;
 		height_frame_ = rect_.h;
 	}
 	//cout<<ret<<" ";
@@ -50,40 +54,94 @@ void Player::SetClip()
 			clip[i].h = height_frame_;
 		}
 	}
-	width_frame_ = TILE_SIZE-1;
-	height_frame_ = TILE_SIZE-1;
+//	width_frame_ = TILE_SIZE-1;
+//	height_frame_ = TILE_SIZE-1;
 }
 
 void Player::Show(SDL_Renderer* des)
 {
-	if(status_ == WALK_LEFT)
+//	if(status_ == WALK_LEFT)
+//	{
+//		LoadImg("Character/knight_left.png", des);
+//	}
+//	else
+//	{
+//		LoadImg("Character/knight_right.png", des);
+//	}
+	//cout<<on_ground_<<"  ";
+	//cout<<status_<<"\n";
+	if(input_type_.attack_ && can_attack) status_ = ATTACK;
+	else if(on_ground_ == 0 && y_val_ < 0) status_ = JUMPUP;
+	else if(on_ground_ == 0 && y_val_ >= 0) status_ = JUMPDOWN;
+	else if(input_type_.right_ || input_type_.left_) status_ = WALK;
+	else if(input_type_.left_ == 0 && input_type_.right_ == 0) status_ = IDLE;
+
+
+	if(pre_status_ != status_) frame_cur_ = 0;
+	else frame_cur_++;
+	//cout<<status_<<" ";
+	if(status_ == JUMPUP)
 	{
-		LoadImg("Character/knight_left.png", des);
+		if(frame_cur_ == 2*num_sprite[status_])
+		{
+			//cout<<frame_cur_<<"\n";
+			frame_cur_ = 2*num_sprite[status_] - 1;
+		}
+		//cout<<on_ground_<<"\n";
+		string path = "Character/adventurer-jump-0" + to_string(frame_cur_/2) + ".png";
+		LoadImg(path, des);
+	}
+	else if(status_ == ATTACK)
+	{
+		if(frame_cur_ == 3*num_sprite[status_])
+		{
+			input_type_.attack_ = 0;
+			frame_cur_ = 0;
+		}
+		//cout<<frame_cur_<<"     ";
+		string path = "Character/adventurer-attack1-0" + to_string(frame_cur_/3) + ".png";
+		LoadImg(path, des);
 	}
 	else
 	{
-		LoadImg("Character/knight_right.png", des);
-	}
+		if(frame_cur_ == 3*num_sprite[status_]) frame_cur_ = 0;
+		if(status_ == IDLE)
+		{
 
-	if(input_type_.left_ == 1 || input_type_.right_ ==1)
-	{
-		frame_cur_++;//move
+			string path = "Character/adventurer-idle-0" + to_string(frame_cur_/3) + ".png";
+			LoadImg(path, des);
+		}
+		else if(status_ == WALK)
+		{
+			string path = "Character/adventurer-run-0" + to_string(frame_cur_/3) + ".png";
+			LoadImg(path, des);
+		}
 	}
-	else frame_cur_ = 0;//idle
-	if(frame_cur_ == 8*4) frame_cur_ = 0;
+	pre_status_ = status_;
+	//cout<<status_<<"\n";
+
+//	if(input_type_.left_ == 1 || input_type_.right_ ==1)
+//	{
+//		frame_cur_++;//move
+//	}
+//	else frame_cur_ = 0;//idle
+//	if(frame_cur_ == 8*4) frame_cur_ = 0;
+	int tmp = 0;// necessary ???
 
 	rect_.x = x_pos_ - map_x_;
 	//cout<<x_pos_<<" "<<map_x_<<"\n";
 	rect_.y = y_pos_ - map_y_;
 
-	width_frame_ = TILE_SIZE-1;
-	height_frame_ = TILE_SIZE-1;
-	SDL_Rect* current_clip = &clip[frame_cur_/4];// * = &//cout<<width_frame_<<" "<<height_frame_<<"\n";
+//	width_frame_ = TILE_SIZE-1;
+//	height_frame_ = TILE_SIZE-1;
+	//SDL_Rect* current_clip = &clip[frame_cur_/4];// * = &//cout<<width_frame_<<" "<<height_frame_<<"\n";
 
-	SDL_Rect renderQuad = {rect_.x, rect_.y, width_frame_, height_frame_};// tao tu hu khong -> ko dung pointer
-	//cout<<rect_.x<<" "<<rect_.y<<" "<<width_frame_<<" "<<height_frame_<<" "<<frame_cur_<<"\n";
-
-	SDL_RenderCopy(des, p_object_, current_clip, &renderQuad);
+	SDL_Rect renderQuad = {rect_.x, rect_.y, rect_.w, rect_.h};// tao tu hu khong -> ko dung pointer
+	//cout<<renderQuad.x<<" "<<renderQuad.y<<" "<<renderQuad.w<<" "<<renderQuad.h<<"\n";
+	//cout<<x_pos_<<" "<<map_x_<<"    "<<y_pos_<< " "<<map_y_<<"\n";
+	SDL_RendererFlip flip_type = SDL_FLIP_NONE;
+	if(save_dir == LEFT) flip_type = SDL_FLIP_HORIZONTAL;
+	SDL_RenderCopyEx(des, p_object_, NULL, &renderQuad, 0, NULL, flip_type);
 }
 
 void Player::HandleInputAction(SDL_Event e)
@@ -92,19 +150,23 @@ void Player::HandleInputAction(SDL_Event e)
 	{
 		switch (e.key.keysym.sym)
 		{
-		case SDLK_RIGHT:
-			status_ = WALK_RIGHT;
+		case SDLK_d:
+			status_ = WALK;
+			save_dir = RIGHT;
 			input_type_.right_ = 1;
 			input_type_.left_ = 0;
 			break;
-		case SDLK_LEFT:
-			status_ = WALK_LEFT;
+		case SDLK_a:
+			status_ = WALK;
+			save_dir = LEFT;
 			input_type_.left_ = 1;
 			input_type_.right_ = 0;
 			break;
-		case SDLK_UP:
+		case SDLK_w:
 			input_type_.jump_ = 1;
 			break;
+		case SDLK_j:
+			input_type_.attack_ = 1;
 		default:
 			break;
 		}
@@ -114,10 +176,10 @@ void Player::HandleInputAction(SDL_Event e)
 	{
 		switch (e.key.keysym.sym)
 		{
-		case SDLK_RIGHT:
+		case SDLK_d:
 			input_type_.right_ = 0;
 			break;
-		case SDLK_LEFT:
+		case SDLK_a:
 			input_type_.left_ = 0;
 			break;
 		default:
@@ -125,6 +187,11 @@ void Player::HandleInputAction(SDL_Event e)
 		}
 	}
 
+	if(e.type == SDL_MOUSEMOTION)
+	{
+		//cout<<event.motion.x<<" "<<event.motion.y<<"\n";
+	}
+	//cout<<status_<<"\n";
 }
 
 void Player::DoPlayer(Map& map_data)
@@ -137,25 +204,37 @@ void Player::DoPlayer(Map& map_data)
 	{
 		y_val_ = CAP_SPEED;
 	}
-
-	if(input_type_.left_ == 1)
+	if(status_ != ATTACK)
 	{
-		x_val_ -= PLAYER_SPEED;
-	}
-	else if(input_type_.right_ == 1)
-	{
-		x_val_ += PLAYER_SPEED;
+		if(input_type_.left_ == 1)
+		{
+			x_val_ -= PLAYER_SPEED;
+		}
+		else if(input_type_.right_ == 1)
+		{
+			x_val_ += PLAYER_SPEED;
+		}
+
 	}
 
+	//Jump
+	//cout<<input_type_.jump_<<"\n";
+	if(y_val_ < -3 && !input_type_.jump_)
+	{
+		y_val_ = -3;
+	}
 	if(input_type_.jump_ == 1)
 	{
 		if(on_ground_ == 1)
 		{
-			y_val_ = -PLAYER_JUMP_SPEED;
+			y_val_ += -PLAYER_JUMP_SPEED;
 		}
+
 		on_ground_ = 0;
 		input_type_.jump_ = 0;
 	}
+
+	//
 	CheckColli(map_data);
 	CenterEntityOnMap(map_data);
 }
@@ -207,6 +286,7 @@ void Player::CheckColli(Map& map_data)
 	{
 		if(y_val_ > 0)
 		{
+
 			if(map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0)
 			{
 
@@ -214,7 +294,6 @@ void Player::CheckColli(Map& map_data)
 
 				y_val_ = 0;
 				on_ground_ = 1;
-
 			}
 			else
 			{

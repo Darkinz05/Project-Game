@@ -96,7 +96,7 @@ bool LoadMedia()
 	game_map.LoadMap("map/map11.txt");
 	game_map.LoadTiles(g_screen);
 
-	player.LoadImg("Character/knight_right.png", g_screen);
+	player.LoadImg("Character/adventurer-idle-00.png", g_screen);
 	player.SetClip();// 8
 
 	menu_background.LoadImg("menu/Menu_background.png", g_screen);
@@ -150,6 +150,11 @@ int main(int argc, char *argv[])
 					quit = true;
 				}
 				player.HandleInputAction(e);
+			}
+			const Uint8* keys = SDL_GetKeyboardState(NULL);
+			if(keys[SDL_SCANCODE_W])
+			{
+				player.input_type_.jump_ = 1;
 			}
 			break;
 		}

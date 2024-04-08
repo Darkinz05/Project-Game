@@ -14,9 +14,9 @@ using namespace std;
 #define SCREEN_HEIGHT	640
 #define GAME_NAME 		"PROJECT-GAME"
 
-const int keyR = 144;
-const int keyG = 132;
-const int keyB = 146;
+const int keyR = 54;
+const int keyG = 136;
+const int keyB = 153;
 
 #define TILE_SIZE 64
 #define MAX_MAP_X 20
@@ -24,7 +24,7 @@ const int keyB = 146;
 
 const SDL_Color button_out = {0,0,0,255};
 const SDL_Color button_in = {255,255,211,255};
-const int fps = 60;
+const int fps = 40;
 
 struct Input
 {
@@ -33,6 +33,7 @@ struct Input
 	int up_;
 	int down_;
 	int jump_;
+	int attack_;
 };
 struct Map
 {
