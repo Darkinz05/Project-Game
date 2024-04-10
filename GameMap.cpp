@@ -38,13 +38,13 @@ void GameMap::LoadMap(string name)
 	fin.close();
 }
 
-void GameMap::LoadTiles(SDL_Renderer* screen)// load cho tile
+void GameMap::LoadTiles(SDL_Renderer* screen, string prefix)// load cho tile
 {
 	std::string name;
 	for(int i=0; i < MAX_TILES; ++i)
 	{
 		//cout<<i<<" ";
-		name = "map/Pane.png";
+		name = prefix + to_string(i) + ".png";
 		std::ifstream fin(name);
 		if(!fin)
 		{
@@ -81,6 +81,7 @@ void GameMap::DrawMap(SDL_Renderer* screen)
 		for(int j=x1; j<x2; j+=TILE_SIZE)// start pixel o tiep theo
 		{
 			int val = game_map_.tile[map_y][map_x];
+			if(val<0) val=-val;
 			if(val)
 			{
 				tile_mat[val].SetRect(j,i,TILE_SIZE,TILE_SIZE);

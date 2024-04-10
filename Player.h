@@ -7,7 +7,8 @@
 #define CAP_SPEED 20
 #define PLAYER_SPEED 8
 #define PLAYER_JUMP_SPEED 20
-const int num_sprite[]={4,6,4,2,6};
+#define DASH_SPEED 20
+const int num_sprite[]={4,6,4,4,6,4};
 class Player: public BaseObject
 {
 public:
@@ -20,7 +21,8 @@ public:
 		WALK = 1,
 		JUMPUP = 2,
 		JUMPDOWN = 3,
-		ATTACK = 4
+		ATTACK = 4,
+		DASH = 5
 	};
 	enum DIR
 	{
@@ -29,8 +31,9 @@ public:
 	};
 	SDL_Rect Box()
 	{
-		return {(int)(x_pos_ + 60), (int)(y_pos_ + 22), 30, 86 };
+		return {(int)(x_pos_ + 60), (int)(y_pos_ + 22), 30, 86 };//for 150x111
 	}
+	void SetXY(int x, int y) {x_pos_ = x, y_pos_ = y;}
 	bool LoadImg(string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua
 	void Show(SDL_Renderer* des);
 	void HandleInputAction(SDL_Event e);
@@ -55,6 +58,7 @@ public:
 	int status_; // L/R
 	int pre_status_;
 	int save_dir;
+	int last_dir;
 	bool on_ground_;
 
 	int map_x_;
@@ -62,6 +66,9 @@ public:
 
 	int can_attack;
 	int pro_attack;
+
+	int dash_pos;
+	int hit_wall;
 };
 
 

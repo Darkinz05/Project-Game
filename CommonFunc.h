@@ -11,7 +11,7 @@
 using namespace std;
 
 #define SCREEN_WIDTH 	1280
-#define SCREEN_HEIGHT	640
+#define SCREEN_HEIGHT	704
 #define GAME_NAME 		"PROJECT-GAME"
 
 const int keyR = 54;
@@ -34,6 +34,7 @@ struct Input
 	int down_;
 	int jump_;
 	int attack_;
+	int dash_;
 };
 struct Map
 {

@@ -15,11 +15,13 @@ using namespace std;
 
 SDL_Window* g_window;
 SDL_Renderer* g_screen;
+TTF_Font* g_font = NULL;
+
 BaseObject g_background;
 enum GAMESCENE
 {
 	MENU = 0,
-	SUB1 = 1,
+	MAP1 = 1,
 	TEST = 2
 };
 bool Init()
@@ -61,13 +63,6 @@ bool Init()
 	}
 	return success;
 }
-
-bool LoadBackground()
-{
-	bool ret = g_background.LoadImg("2493466.png",g_screen);
-	return ret;
-}
-
 void Close()
 {
 	g_background.Free();
@@ -75,44 +70,47 @@ void Close()
 	g_screen = NULL;
 	SDL_DestroyWindow(g_window);
 	g_window = NULL;
+	TTF_CloseFont( g_font );
+    g_font = NULL;
 
+    TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
 
 Player player;
 GameMap game_map;
-
+bool load_map1;
 BaseObject menu_background;
 Button play_button;
 
-TTF_Font* g_font = NULL;
+
 bool LoadMedia()
 {
 	g_font = TTF_OpenFont("Corda_W01_Medium.ttf", 80);
-	if(LoadBackground() == false) return 0;
-
-	//game_map.LoadMap("map/map01.dat");
-	game_map.LoadMap("map/map11.txt");
-	game_map.LoadTiles(g_screen);
-
-	player.LoadImg("Character/adventurer-idle-00.png", g_screen);
-	player.SetClip();// 8
 
 	menu_background.LoadImg("menu/Menu_background.png", g_screen);
 	play_button.LoadTTF("Play", g_screen, g_font, button_out);
 	return 1;
 }
 
+void LoadMap1()
+{
+	g_background.LoadImg("map/Boss1/Ice_background.png",g_screen);
+	g_background.SetRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+	game_map.LoadMap("map/Boss1/Map1.txt");
+	game_map.LoadTiles(g_screen,"map/Boss1/Tile");
+
+}
 int scene = 0;
 void ChangeScene()
 {
 	switch(scene)
 	{
 	case MENU:
-		if(play_button.GetAdvance()) scene = SUB1;
+		if(play_button.GetAdvance()) scene = MAP1;
 		break;
-	case SUB1:
+	case MAP1:
 
 		break;
 	}
@@ -129,7 +127,8 @@ int main(int argc, char *argv[])
 	{
 		//cout<<1<<" ";
 		time.start();
-		//event
+		ChangeScene();// *warning*
+		//event and media
 		switch(scene)
 		{
 		case MENU:
@@ -142,7 +141,13 @@ int main(int argc, char *argv[])
 				play_button.HandleInput(e);
 			}
 			break;
-		case SUB1:
+		case MAP1:
+			if(load_map1 == 0)
+			{
+				LoadMap1();
+				load_map1 = 1;
+			}
+			//cout<<player.x_pos_<<"  "<<player.y_pos_<<"\n";
 			while(SDL_PollEvent(&e) != 0)
 			{
 				if(e.type == SDL_QUIT)
@@ -165,11 +170,11 @@ int main(int argc, char *argv[])
 		case MENU:
 
 			break;
-		case SUB1:
+		case MAP1:
 			break;
 		}
 
-		ChangeScene();
+
 		//render
 		SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
 		SDL_RenderClear(g_screen);
@@ -191,7 +196,7 @@ int main(int argc, char *argv[])
 				break;
 			}
 
-		case SUB1:
+		case MAP1:
 			{
 				g_background.Render(g_screen);
 
@@ -203,7 +208,7 @@ int main(int argc, char *argv[])
 				player.Show(g_screen);
 
 				game_map.SetMap(map_data);
-				game_map.DrawMap(g_screen);
+				//game_map.DrawMap(g_screen);
 				SDL_RenderPresent(g_screen);
 				break;
 			}

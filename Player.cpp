@@ -20,7 +20,10 @@ Player::Player()
 	map_x_ = 0;
 	map_y_ = 0;
 	save_dir = LEFT;
+	last_dir = LEFT;
 	can_attack = 1;
+	dash_pos = 0;
+	hit_wall = 0;
 }
 
 Player::~Player()
@@ -70,21 +73,18 @@ void Player::Show(SDL_Renderer* des)
 //	}
 	//cout<<on_ground_<<"  ";
 	//cout<<status_<<"\n";
-	if(input_type_.attack_ && can_attack) status_ = ATTACK;
-	else if(on_ground_ == 0 && y_val_ < 0) status_ = JUMPUP;
-	else if(on_ground_ == 0 && y_val_ >= 0) status_ = JUMPDOWN;
-	else if(input_type_.right_ || input_type_.left_) status_ = WALK;
-	else if(input_type_.left_ == 0 && input_type_.right_ == 0) status_ = IDLE;
+
 
 
 	if(pre_status_ != status_) frame_cur_ = 0;
 	else frame_cur_++;
 	//cout<<status_<<" ";
-	if(status_ == JUMPUP)
+	if(status_ == JUMPUP || status_ == JUMPDOWN)
 	{
+		if(status_ == JUMPDOWN) frame_cur_ = 2*num_sprite[status_];
 		if(frame_cur_ == 2*num_sprite[status_])
 		{
-			//cout<<frame_cur_<<"\n";
+			//
 			frame_cur_ = 2*num_sprite[status_] - 1;
 		}
 		//cout<<on_ground_<<"\n";
@@ -102,19 +102,29 @@ void Player::Show(SDL_Renderer* des)
 		}
 		//cout<<frame_cur_<<"     ";
 		string path = "Character/adventurer-attack" + to_string(pro_attack+1) + "-0" + to_string(frame_cur_/3) + ".png";
-		cout<<LoadImg(path, des);
+		LoadImg(path, des);
+	}
+	else if(status_ == DASH)
+	{
+		if(frame_cur_ == 2*num_sprite[status_])
+		{
+			frame_cur_ = 0;
+		}
+		string path = "Character/adventurer-dash-0" + to_string(frame_cur_/2) + ".png";
+		LoadImg(path, des);
 	}
 	else
 	{
-		if(frame_cur_ == 3*num_sprite[status_]) frame_cur_ = 0;
+
 		if(status_ == IDLE)
 		{
-
-			string path = "Character/adventurer-idle-0" + to_string(frame_cur_/3) + ".png";
+			if(frame_cur_ == 5*num_sprite[status_]) frame_cur_ = 0;
+			string path = "Character/adventurer-idle-0" + to_string(frame_cur_/5) + ".png";
 			LoadImg(path, des);
 		}
 		else if(status_ == WALK)
 		{
+			if(frame_cur_ == 3*num_sprite[status_]) frame_cur_ = 0;
 			string path = "Character/adventurer-run-0" + to_string(frame_cur_/3) + ".png";
 			LoadImg(path, des);
 		}
@@ -169,6 +179,11 @@ void Player::HandleInputAction(SDL_Event e)
 			break;
 		case SDLK_j:
 			input_type_.attack_ = 1;
+			break;
+		case SDLK_k:
+			dash_pos = x_pos_;
+			input_type_.dash_ = 1;
+			break;
 		default:
 			break;
 		}
@@ -206,17 +221,30 @@ void Player::DoPlayer(Map& map_data)
 	{
 		y_val_ = CAP_SPEED;
 	}
-	if(status_ != ATTACK)
+	if(input_type_.attack_ && can_attack) status_ = ATTACK;
+	else if(input_type_.dash_) status_ = DASH;
+	else if(on_ground_ == 0 && y_val_ < 0) status_ = JUMPUP;
+	else if(on_ground_ == 0 && y_val_ >= 0) status_ = JUMPDOWN;
+	else if(input_type_.right_ || input_type_.left_) status_ = WALK;
+	else if(input_type_.left_ == 0 && input_type_.right_ == 0) status_ = IDLE;
+	//cout<<status_<<"\n";
+	if(status_ != ATTACK && status_ != DASH)
 	{
 		if(input_type_.left_ == 1)
 		{
 			x_val_ -= PLAYER_SPEED;
+			last_dir = LEFT;
 		}
 		else if(input_type_.right_ == 1)
 		{
 			x_val_ += PLAYER_SPEED;
+			last_dir = RIGHT;
 		}
-
+	}
+	else if(status_ == DASH)
+	{
+		if(last_dir == LEFT) x_val_ -= DASH_SPEED;
+		else if(last_dir == RIGHT) x_val_ += DASH_SPEED;
 	}
 
 	//Jump
@@ -239,6 +267,12 @@ void Player::DoPlayer(Map& map_data)
 	//
 	CheckColli(map_data);
 	CenterEntityOnMap(map_data);
+
+	if(abs(x_pos_ - dash_pos) >= 150 || hit_wall == 1)
+	{
+		input_type_.dash_ = 0;
+		hit_wall = 0;
+	}
 }
 
 void Player::CheckColli(Map& map_data)
@@ -263,20 +297,22 @@ void Player::CheckColli(Map& map_data)
 	{
 		if(x_val_ > 0) //moving to right
 		{
-			if(map_data.tile[y1][x2] != 0 || map_data.tile[y2][x2] != 0)
+			if(map_data.tile[y1][x2] > 0 || map_data.tile[y2][x2] > 0)
 			{
 				//Box().x = x2*TILE_SIZE - width_frame_ ;
 				x_pos_ = x2*TILE_SIZE - Box().w - 60;
 				x_val_ = 0;
+				hit_wall = 1;
 			}
 		}
 		else if(x_val_ < 0)
 		{
-			if(map_data.tile[y1][x1] != 0 || map_data.tile[y2][x1] != 0)
+			if(map_data.tile[y1][x1] > 0 || map_data.tile[y2][x1] > 0)
 			{
 				//Box().x = (x1+1)*TILE_SIZE;
 				x_pos_ = (x1+1)*TILE_SIZE -60;
 				x_val_ = 0;
+				hit_wall = 1;
 			}
 		}
 
@@ -295,7 +331,7 @@ void Player::CheckColli(Map& map_data)
 	{
 		if(y_val_ > 0)
 		{
-			if(map_data.tile[y2][x1] != 0 || map_data.tile[y2][x2] != 0)
+			if(map_data.tile[y2][x1] > 0 || map_data.tile[y2][x2] > 0)
 			{
 				//y_pos_ = y2*TILE_SIZE - height_frame_;
 				y_pos_ = y2*TILE_SIZE - Box().h - 22;
@@ -309,7 +345,7 @@ void Player::CheckColli(Map& map_data)
 		}
 		else if(y_val_ < 0)
 		{
-			if(map_data.tile[y1][x1] != 0 || map_data.tile[y1][x2] != 0)
+			if(map_data.tile[y1][x1] > 0 || map_data.tile[y1][x2] > 0)
 			{
 				//y_pos_ = (y1+1)*TILE_SIZE;
 				y_pos_ = (y1+1)*TILE_SIZE - 22;
@@ -321,11 +357,11 @@ void Player::CheckColli(Map& map_data)
 
 
 
-	if(x_pos_ < 0) x_pos_ = 0;
+	if(Box().x < 0) x_pos_ = 0 - 60;
 	else if(x_pos_ + width_frame_ > map_data.max_x_)
 	{
 		//cout<<1;
-		x_pos_ = map_data.max_x_ - width_frame_ - 1;// max x la diem pixel cuoi cuar map
+		x_pos_ = map_data.max_x_ - width_frame_ - 1 ;// max x la diem pixel cuoi cuar map
 	}
 
 	//cout<<x_pos_<<" "<<y_pos_<<"\n";
