@@ -9,6 +9,7 @@
 #define PLAYER_JUMP_SPEED 20
 #define DASH_SPEED 20
 const int num_sprite[]={4,6,4,4,6,4};
+class Boss1;// chatGPT
 class Player: public BaseObject
 {
 public:
@@ -29,6 +30,7 @@ public:
 		LEFT = 0,
 		RIGHT = 1
 	};
+	void Reset();
 	SDL_Rect Box()
 	{
 		return {(int)(x_pos_ + 60), (int)(y_pos_ + 22), 30, 86 };//for 150x111
@@ -36,9 +38,11 @@ public:
 	void SetXY(int x, int y) {x_pos_ = x, y_pos_ = y;}
 	bool LoadImg(string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua
 	void Show(SDL_Renderer* des);
+	void ShowHealthBar(SDL_Renderer* des);
 	void HandleInputAction(SDL_Event e);
 	void SetClip();
 	void DoPlayer(Map& map_data);
+	void Interaction1(Boss1& boss1);
 	void CheckColli(Map& map_data);
 	void SetMapXY(const int map_x, const int map_y) {map_x_ = map_x; map_y_ = map_y;}
 	void CenterEntityOnMap(Map& map_data);
@@ -69,6 +73,10 @@ public:
 
 	int dash_pos;
 	int hit_wall;
+
+	int health;
+	int invincible;
+	BaseObject health_bar;
 };
 
 

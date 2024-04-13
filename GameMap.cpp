@@ -1,5 +1,6 @@
 #include "GameMap.h"
-
+extern int MAX_MAP_X;
+extern int MAX_MAP_Y;
 void GameMap::LoadMap(string name)
 {
 	std::ifstream fin(name);

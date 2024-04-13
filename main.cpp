@@ -9,6 +9,7 @@ and may not be redistributed without written permission.*/
 #include "Player.h"
 #include "Timer.h"
 #include "Button.h"
+#include "Boss1.h"
 #undef main
 
 using namespace std;
@@ -17,7 +18,10 @@ SDL_Window* g_window;
 SDL_Renderer* g_screen;
 TTF_Font* g_font = NULL;
 
+int MAX_MAP_X = 20;
+int MAX_MAP_Y = 14;
 BaseObject g_background;
+
 enum GAMESCENE
 {
 	MENU = 0,
@@ -94,13 +98,13 @@ bool LoadMedia()
 	return 1;
 }
 
+Boss1 boss1;
 void LoadMap1()
 {
 	g_background.LoadImg("map/Boss1/Ice_background.png",g_screen);
 	g_background.SetRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
 	game_map.LoadMap("map/Boss1/Map1.txt");
 	game_map.LoadTiles(g_screen,"map/Boss1/Tile");
-
 }
 int scene = 0;
 void ChangeScene()
@@ -144,6 +148,8 @@ int main(int argc, char *argv[])
 		case MAP1:
 			if(load_map1 == 0)
 			{
+				MAX_MAP_X = 20;
+				MAX_MAP_Y = 11;
 				LoadMap1();
 				load_map1 = 1;
 			}
@@ -168,7 +174,6 @@ int main(int argc, char *argv[])
 		switch(scene)
 		{
 		case MENU:
-
 			break;
 		case MAP1:
 			break;
@@ -203,10 +208,16 @@ int main(int argc, char *argv[])
 				game_map.DrawMap(g_screen);
 				Map map_data = game_map.GetMap();
 				//tes.Render(g_screen);
+				boss1.SetMapXY(map_data.start_x_, map_data.start_y_);
+				boss1.DoBoss(map_data, player);
+				boss1.Show(g_screen);
+
 				player.SetMapXY(map_data.start_x_, map_data.start_y_);
+				player.Interaction1(boss1);
 				player.DoPlayer(map_data);
 				player.Show(g_screen);
 
+				player.ShowHealthBar(g_screen);
 				game_map.SetMap(map_data);
 				//game_map.DrawMap(g_screen);
 				SDL_RenderPresent(g_screen);

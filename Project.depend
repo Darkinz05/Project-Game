@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1710065224 source:c:\users\dell\documents\code\ltnc\project-game\commonfunc.cpp
+1712913388 source:c:\users\dell\documents\code\ltnc\project-game\commonfunc.cpp
 	"CommonFunc.h"
 
-1712757819 c:\users\dell\documents\code\ltnc\project-game\commonfunc.h
+1712913391 c:\users\dell\documents\code\ltnc\project-game\commonfunc.h
 	<bits/stdc++.h>
 	<SDL.h>
 	<SDL_image.h>
@@ -424,13 +424,14 @@
 
 1710066933 source:c:\users\dell\documents\code\ltnc\project-game\baseobj.cpp
 
-1712759424 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
+1712913476 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
 	"CommonFunc.h"
 	"BaseObject.h"
 	"GameMap.h"
 	"Player.h"
 	"Timer.h"
 	"Button.h"
+	"Boss1.h"
 
 1710327181 c:\users\dell\documents\code\ltnc\project-game\defs.h
 
@@ -465,10 +466,10 @@
 	<stdio.h>
 	<string>
 
-1712422193 c:\users\dell\documents\code\ltnc\project-game\baseobject.h
+1712907262 c:\users\dell\documents\code\ltnc\project-game\baseobject.h
 	"CommonFunc.h"
 
-1712759473 source:c:\users\dell\documents\code\ltnc\project-game\gamemap.cpp
+1712761369 source:c:\users\dell\documents\code\ltnc\project-game\gamemap.cpp
 	"GameMap.h"
 
 1712759424 c:\users\dell\documents\code\ltnc\project-game\gamemap.h
@@ -478,13 +479,13 @@
 1712688147 source:c:\users\dell\documents\code\ltnc\project-game\baseobject.cpp
 	"BaseObject.h"
 
-1712753695 c:\users\dell\documents\code\ltnc\project-game\player.h
+1712910866 c:\users\dell\documents\code\ltnc\project-game\player.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1712760053 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
-	"CommonFunc.h"
+1712915539 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
 	"Player.h"
+	"Boss1.h"
 
 1711806819 source:c:\users\dell\documents\code\ltnc\project-game\timer.cpp
 	"Timer.h"
@@ -498,6 +499,22 @@
 	"Button.h"
 
 1712758812 c:\users\dell\documents\code\ltnc\project-game\button.h
+	"CommonFunc.h"
+	"BaseObject.h"
+
+1712944745 source:c:\users\dell\documents\code\ltnc\project-game\boss1.cpp
+	"Boss1.h"
+	"Player.h"
+	"Bullet.h"
+
+1712989050 c:\users\dell\documents\code\ltnc\project-game\boss1.h
+	"CommonFunc.h"
+	"BaseObject.h"
+
+1712936278 source:c:\users\dell\documents\code\ltnc\project-game\bullet.cpp
+	"Bullet.h"
+
+1712936267 c:\users\dell\documents\code\ltnc\project-game\bullet.h
 	"CommonFunc.h"
 	"BaseObject.h"
 

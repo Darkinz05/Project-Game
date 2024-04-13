@@ -1,6 +1,8 @@
-#include "CommonFunc.h"
-#include "Player.h"
 
+#include "Player.h"
+#include "Boss1.h"
+extern int MAX_MAP_X;
+extern int MAX_MAP_Y;
 Player::Player()
 {
 	frame_cur_ = 0;
@@ -24,6 +26,8 @@ Player::Player()
 	can_attack = 1;
 	dash_pos = 0;
 	hit_wall = 0;
+	health = 4;
+	invincible = 0;
 }
 
 Player::~Player()
@@ -31,6 +35,10 @@ Player::~Player()
 
 }
 
+void Player::Reset()
+{
+
+}
 bool Player::LoadImg(string path, SDL_Renderer* screen)
 {
 	bool ret = BaseObject::LoadImg(path, screen);
@@ -60,7 +68,14 @@ void Player::SetClip()
 //	width_frame_ = TILE_SIZE-1;
 //	height_frame_ = TILE_SIZE-1;
 }
-
+void Player::ShowHealthBar(SDL_Renderer* des)
+{
+	string path = "Character/adventurer-health-" + to_string(health) + ".png";
+	health_bar.LoadImg(path, des);
+	health_bar.rect_.x = 20;
+	health_bar.rect_.y = 20;
+	health_bar.Render(des);
+}
 void Player::Show(SDL_Renderer* des)
 {
 //	if(status_ == WALK_LEFT)
@@ -78,6 +93,7 @@ void Player::Show(SDL_Renderer* des)
 
 	if(pre_status_ != status_) frame_cur_ = 0;
 	else frame_cur_++;
+	pre_status_ = status_;
 	//cout<<status_<<" ";
 	if(status_ == JUMPUP || status_ == JUMPDOWN)
 	{
@@ -129,7 +145,7 @@ void Player::Show(SDL_Renderer* des)
 			LoadImg(path, des);
 		}
 	}
-	pre_status_ = status_;
+
 	//cout<<status_<<"\n";
 
 //	if(input_type_.left_ == 1 || input_type_.right_ ==1)
@@ -211,6 +227,31 @@ void Player::HandleInputAction(SDL_Event e)
 	//cout<<status_<<"\n";
 }
 
+void Player::Interaction1(Boss1& boss1)
+{
+	if(invincible == 0)
+	{
+		int get_hit = 0;
+		if(boss1.active_punch==1)
+		{
+			if(overlap(Box(), boss1.Punch()) == 1) get_hit = 1;
+		}
+
+		if(get_hit && health > 0)
+		{
+			health--;
+			invincible = 50;
+		}
+	}
+	else
+	{
+		invincible--;
+	}
+
+
+
+}
+
 void Player::DoPlayer(Map& map_data)
 {
 
@@ -274,6 +315,8 @@ void Player::DoPlayer(Map& map_data)
 		hit_wall = 0;
 	}
 }
+
+
 
 void Player::CheckColli(Map& map_data)
 {
@@ -357,11 +400,16 @@ void Player::CheckColli(Map& map_data)
 
 
 
-	if(Box().x < 0) x_pos_ = 0 - 60;
-	else if(x_pos_ + width_frame_ > map_data.max_x_)
+	if(Box().x < 0)
+	{
+		x_pos_ = 0 - 60;
+		hit_wall = 1;
+	}
+	else if(x_pos_ + rect_.w > map_data.max_x_)
 	{
 		//cout<<1;
-		x_pos_ = map_data.max_x_ - width_frame_ - 1 ;// max x la diem pixel cuoi cuar map
+		hit_wall = 1;
+		x_pos_ = map_data.max_x_ - rect_.w - 1 ;// max x la diem pixel cuoi cuar map
 	}
 
 	//cout<<x_pos_<<" "<<y_pos_<<"\n";
@@ -370,7 +418,7 @@ void Player::CheckColli(Map& map_data)
 
 void Player::CenterEntityOnMap(Map& map_data)// set start_x_y// camera
 {
-	map_data.start_x_ = x_pos_ + width_frame_/2 - (SCREEN_WIDTH/2) + 50;// return to cemter
+	map_data.start_x_ = x_pos_ + rect_.w/2 - (SCREEN_WIDTH/2) + 50;// return to cemter
 	if(map_data.start_x_ < 0)
 	{
 		map_data.start_x_ = 0;
@@ -380,7 +428,7 @@ void Player::CenterEntityOnMap(Map& map_data)// set start_x_y// camera
 		map_data.start_x_ = map_data.max_x_ - SCREEN_WIDTH;
 	}
 
-	map_data.start_y_ = y_pos_ + height_frame_/2 - (SCREEN_HEIGHT/2);
+	map_data.start_y_ = y_pos_ + rect_.h/2 - (SCREEN_HEIGHT/2);
 	if(map_data.start_y_ < 0)
 	{
 		map_data.start_y_ = 0;
