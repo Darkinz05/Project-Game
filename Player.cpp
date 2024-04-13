@@ -1,6 +1,8 @@
 
 #include "Player.h"
 #include "Boss1.h"
+#include "Bullet.h"
+
 extern int MAX_MAP_X;
 extern int MAX_MAP_Y;
 Player::Player()
@@ -235,6 +237,10 @@ void Player::Interaction1(Boss1& boss1)
 		if(boss1.active_punch==1)
 		{
 			if(overlap(Box(), boss1.Punch()) == 1) get_hit = 1;
+		}
+		for(Bullet bullet: boss1.bullet_list)
+		{
+			if(overlap(Box(), bullet.Box())) get_hit = 1;
 		}
 
 		if(get_hit && health > 0)

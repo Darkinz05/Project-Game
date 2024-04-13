@@ -41,6 +41,7 @@ public:
 	}
 	void SetXY(int x, int y) {x_pos_ = x; y_pos_ = y;}
 	void Show(SDL_Renderer* des);
+	void ShowBullet(SDL_Renderer* des);
 	void AdvanceState();
 	void DoBoss(Map& map_data, Player& player);
 	void CheckColli(Map& map_data);

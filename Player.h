@@ -10,6 +10,7 @@
 #define DASH_SPEED 20
 const int num_sprite[]={4,6,4,4,6,4};
 class Boss1;// chatGPT
+class Bullet;
 class Player: public BaseObject
 {
 public:

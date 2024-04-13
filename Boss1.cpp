@@ -47,6 +47,7 @@ void Boss1::Show(SDL_Renderer* des)
 	if(pre_status_ != status_) frame_cur_ = 0;
 	else frame_cur_++;
 	pre_status_ = status_;
+	//cout<<status_<<" "<<x_pos_<<" "<<y_pos_<<"\n";
 	//cout<<frame_cur_<<"\n";
 	if(status_ == IDLE)
 	{
@@ -81,16 +82,38 @@ void Boss1::Show(SDL_Renderer* des)
 		if(frame_cur_ == 3*num_sprite1[status_]-1)
 		{
 			status_ = IDLE;
-			rest_time = rnd(1,3);
+			rest_time = rnd(2,4);
 			melee = 0;
+			//cout<<22323<<"\n";
 		}
 		if(frame_cur_/3 == 6) active_punch = 1;
 		else if(frame_cur_/3 == 10) active_punch = 0;
-//		if(frame_cur_/3 == 6 && can_shoot)
-//		{
-//			Bullet blet;
-//			blet.LoadImg()
-//		}
+		if(frame_cur_/3 == 6 && can_shoot)
+		{
+			Bullet blet;
+			blet.LoadImg("map/Boss1/Boss-bullet-0.png", des);
+
+			if(save_dir == LEFT)
+			{
+				blet.dir = Bullet::BLEFT;
+				blet.SetForBox(66,69,179,65);
+				//SDL_Rect tBox = blet.Box(66, 69, 179, 65);
+				blet.SetPos(rect_.x-Box().w-5, rect_.y + 50);
+			}
+			else if(save_dir == RIGHT)
+			{
+				blet.dir = Bullet::BRIGHT;
+				blet.SetForBox(66,69,179,65);
+				//SDL_Rect tBox = blet.Box(66, 69, 179, 65);
+				blet.SetPos(rect_.x+rect_.w-100, rect_.y + 50);
+			}
+
+			blet.is_move = 1;
+			bullet_list.push_back(blet);
+
+			can_shoot = 0;
+
+		}
 		string path = "map/Boss1/Boss-attack1-" + to_string(frame_cur_/3) + ".png";
 		LoadImg(path, des);
 	}
@@ -103,6 +126,36 @@ void Boss1::Show(SDL_Renderer* des)
 	SDL_RendererFlip flip_type = SDL_FLIP_NONE;
 	if(save_dir == RIGHT) flip_type = SDL_FLIP_HORIZONTAL;
 	SDL_RenderCopyEx(des, p_object_, NULL, &renderQuad, 0, NULL, flip_type);
+
+	ShowBullet(des);
+}
+
+void Boss1::ShowBullet(SDL_Renderer* des)
+{
+	for(int i=(int)bullet_list.size()-1; i>=0; --i)
+	{
+		Bullet *x = &bullet_list[i];
+
+		if(x->is_move)
+		{
+			x->Move();
+			x->frame_cur_++;
+			if(x->frame_cur_ == 5*10)
+			{
+				x->frame_cur_ = 0;
+			}
+			string path = "map/Boss1/Boss-bullet-" + to_string(x->frame_cur_/5) + ".png";
+			x->LoadImg(path, des);
+			SDL_Rect renderQuad = {x->rect_.x, x->rect_.y, x->rect_.w, x->rect_.h};
+			SDL_RendererFlip flip_type = SDL_FLIP_NONE;
+			if(x->dir == Bullet::BLEFT) flip_type = SDL_FLIP_HORIZONTAL;
+			SDL_RenderCopyEx(des, x->p_object_, NULL, &renderQuad, 0, NULL, flip_type);
+		}
+		else
+		{
+			bullet_list.erase(bullet_list.begin() + i);
+		}
+	}
 }
 void Boss1::DoBoss(Map& map_data, Player& player)
 {
