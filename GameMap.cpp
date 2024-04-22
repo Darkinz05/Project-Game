@@ -47,10 +47,12 @@ void GameMap::LoadTiles(SDL_Renderer* screen, string prefix)// load cho tile
 		//cout<<i<<" ";
 		name = prefix + to_string(i) + ".png";
 		std::ifstream fin(name);
+//		cout<<name<<"\n";
 		if(!fin)
 		{
 			continue;
 		}
+//		cout<< 11<<"\n";
 		fin.close();
 		tile_mat[i].LoadImg(name, screen);
 

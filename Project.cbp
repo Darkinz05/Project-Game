@@ -46,6 +46,8 @@
 		<Unit filename="BaseObject.h" />
 		<Unit filename="Boss1.cpp" />
 		<Unit filename="Boss1.h" />
+		<Unit filename="Boss2.cpp" />
+		<Unit filename="Boss2.h" />
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
 		<Unit filename="Button.cpp" />

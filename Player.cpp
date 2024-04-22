@@ -5,11 +5,13 @@
 
 extern int MAX_MAP_X;
 extern int MAX_MAP_Y;
+
+extern Mix_Chunk* player_hurt;
 Player::Player()
 {
 	frame_cur_ = 0;
-	x_pos_ = 400;
-	y_pos_ = 400;
+	x_pos_ = 100;
+	y_pos_ = 500;
 	x_val_ = 0;
 	y_val_ = 0;
 	width_frame_ = 0;
@@ -23,9 +25,11 @@ Player::Player()
 	input_type_.jump_ = 0;
 	map_x_ = 0;
 	map_y_ = 0;
-	save_dir = LEFT;
-	last_dir = LEFT;
+	save_dir = RIGHT;
+	last_dir = RIGHT;
 	can_attack = 1;
+	pro_attack = 0;
+	active_attack = 0;
 	dash_pos = 0;
 	hit_wall = 0;
 	health = 4;
@@ -39,7 +43,31 @@ Player::~Player()
 
 void Player::Reset()
 {
-
+	frame_cur_ = 0;
+	x_pos_ = 100;
+	y_pos_ = 500;
+	x_val_ = 0;
+	y_val_ = 0;
+	width_frame_ = 0;
+	height_frame_ = 0;
+	status_ = -1;
+	pre_status_ = -2;
+	input_type_.left_ = 0;
+	input_type_.right_ = 0;
+	input_type_.up_ = 0;
+	input_type_.down_ = 0;
+	input_type_.jump_ = 0;
+	map_x_ = 0;
+	map_y_ = 0;
+	save_dir = RIGHT;
+	last_dir = RIGHT;
+	can_attack = 1;
+	pro_attack = 0;
+	active_attack = 0;
+	dash_pos = 0;
+	hit_wall = 0;
+	health = 4;
+	invincible = 0;
 }
 bool Player::LoadImg(string path, SDL_Renderer* screen)
 {
@@ -111,9 +139,11 @@ void Player::Show(SDL_Renderer* des)
 	}
 	else if(status_ == ATTACK)
 	{
+		if(frame_cur_ == 1) active_attack = 1;
 		if(frame_cur_ == 3*num_sprite[status_])
 		{
 			input_type_.attack_ = 0;
+			active_attack = 0;
 			frame_cur_ = 0;
 			pro_attack++;
 			if(pro_attack == 3) pro_attack = 0;
@@ -121,6 +151,7 @@ void Player::Show(SDL_Renderer* des)
 		//cout<<frame_cur_<<"     ";
 		string path = "Character/adventurer-attack" + to_string(pro_attack+1) + "-0" + to_string(frame_cur_/3) + ".png";
 		LoadImg(path, des);
+
 	}
 	else if(status_ == DASH)
 	{
@@ -129,6 +160,15 @@ void Player::Show(SDL_Renderer* des)
 			frame_cur_ = 0;
 		}
 		string path = "Character/adventurer-dash-0" + to_string(frame_cur_/2) + ".png";
+		LoadImg(path, des);
+	}
+	else if(status_ == DEATH)
+	{
+		if(frame_cur_ == 6*num_sprite[status_])
+		{
+			frame_cur_ = 6*num_sprite[status_]-1;
+		}
+		string path = "Character/adventurer-death-" + to_string(frame_cur_/6) + ".png";
 		LoadImg(path, des);
 	}
 	else
@@ -170,7 +210,7 @@ void Player::Show(SDL_Renderer* des)
 	//cout<<renderQuad.x<<" "<<renderQuad.y<<" "<<renderQuad.w<<" "<<renderQuad.h<<"\n";
 	//cout<<x_pos_<<" "<<map_x_<<"    "<<y_pos_<< " "<<map_y_<<"\n";
 	SDL_RendererFlip flip_type = SDL_FLIP_NONE;
-	if(save_dir == LEFT) flip_type = SDL_FLIP_HORIZONTAL;
+	if(save_dir == LEFT && status_ != DEATH) flip_type = SDL_FLIP_HORIZONTAL;
 	SDL_RenderCopyEx(des, p_object_, NULL, &renderQuad, 0, NULL, flip_type);
 }
 
@@ -201,6 +241,9 @@ void Player::HandleInputAction(SDL_Event e)
 		case SDLK_k:
 			dash_pos = x_pos_;
 			input_type_.dash_ = 1;
+			break;
+		case SDLK_p:
+			health = 0;
 			break;
 		default:
 			break;
@@ -247,7 +290,9 @@ void Player::Interaction1(Boss1& boss1)
 		{
 			health--;
 			invincible = 50;
+			Mix_PlayChannel(-1, player_hurt, 0);
 		}
+
 	}
 	else
 	{
@@ -263,19 +308,21 @@ void Player::DoPlayer(Map& map_data)
 
 	x_val_ = 0;
 	y_val_ += GRAV;
-
+	//cout<<save_dir<<"\n";
 	if(y_val_ >= CAP_SPEED)
 	{
 		y_val_ = CAP_SPEED;
 	}
-	if(input_type_.attack_ && can_attack) status_ = ATTACK;
+	//cout<<health <<" ";
+	if(health <= 0) status_ = DEATH;
+	else if(input_type_.attack_ && can_attack) status_ = ATTACK;
 	else if(input_type_.dash_) status_ = DASH;
 	else if(on_ground_ == 0 && y_val_ < 0) status_ = JUMPUP;
 	else if(on_ground_ == 0 && y_val_ >= 0) status_ = JUMPDOWN;
 	else if(input_type_.right_ || input_type_.left_) status_ = WALK;
 	else if(input_type_.left_ == 0 && input_type_.right_ == 0) status_ = IDLE;
 	//cout<<status_<<"\n";
-	if(status_ != ATTACK && status_ != DASH)
+	if(status_!=DEATH && status_ != ATTACK && status_ != DASH)
 	{
 		if(input_type_.left_ == 1)
 		{
@@ -293,7 +340,21 @@ void Player::DoPlayer(Map& map_data)
 		if(last_dir == LEFT) x_val_ -= DASH_SPEED;
 		else if(last_dir == RIGHT) x_val_ += DASH_SPEED;
 	}
-
+	else if(status_ == DEATH)
+	{
+		x_val_ = 0;
+		y_val_ = 0;
+		input_type_.left_ = 0;
+		input_type_.right_ = 0;
+		input_type_.up_ = 0;
+		input_type_.down_ = 0;
+		input_type_.jump_ = 0;
+		can_attack = 1;
+		pro_attack = 0;
+		active_attack = 0;
+		//cout<<1;
+	}
+	//cout<<active_attack<<"\n";
 	//Jump
 	//cout<<input_type_.jump_<<"\n";
 	if(y_val_ < -3 && !input_type_.jump_)
@@ -312,8 +373,12 @@ void Player::DoPlayer(Map& map_data)
 	}
 
 	//
-	CheckColli(map_data);
-	CenterEntityOnMap(map_data);
+	if(status_ != DEATH)
+	{
+		CheckColli(map_data);
+		CenterEntityOnMap(map_data);
+	}
+
 
 	if(abs(x_pos_ - dash_pos) >= 150 || hit_wall == 1)
 	{
@@ -322,7 +387,10 @@ void Player::DoPlayer(Map& map_data)
 	}
 }
 
-
+bool Pass(int x)
+{
+	return (x == 24 || x == 25 || x == 26 || x == 27);
+}
 
 void Player::CheckColli(Map& map_data)
 {
@@ -344,8 +412,14 @@ void Player::CheckColli(Map& map_data)
 	//cout<<x1<<" "<<x2<<" "<<y1<<" "<<y2<<"\n";
 	if(x1>=0 && x2<MAX_MAP_X && y1>=0 && y2<MAX_MAP_Y)
 	{
+
 		if(x_val_ > 0) //moving to right
 		{
+			if(Pass(map_data.tile[y1][x2]) || Pass(map_data.tile[y2][x2]))
+			{
+
+			}
+			else
 			if(map_data.tile[y1][x2] > 0 || map_data.tile[y2][x2] > 0)
 			{
 				//Box().x = x2*TILE_SIZE - width_frame_ ;
@@ -356,6 +430,11 @@ void Player::CheckColli(Map& map_data)
 		}
 		else if(x_val_ < 0)
 		{
+			if(Pass(map_data.tile[y1][x1]) || Pass(map_data.tile[y2][x1]))
+			{
+
+			}
+			else
 			if(map_data.tile[y1][x1] > 0 || map_data.tile[y2][x1] > 0)
 			{
 				//Box().x = (x1+1)*TILE_SIZE;
@@ -394,8 +473,14 @@ void Player::CheckColli(Map& map_data)
 		}
 		else if(y_val_ < 0)
 		{
+			if(Pass(map_data.tile[y1][x1]) || Pass(map_data.tile[y1][x2]))
+			{
+
+			}
+			else
 			if(map_data.tile[y1][x1] > 0 || map_data.tile[y1][x2] > 0)
 			{
+
 				//y_pos_ = (y1+1)*TILE_SIZE;
 				y_pos_ = (y1+1)*TILE_SIZE - 22;
 				y_val_ = 0;
@@ -421,6 +506,7 @@ void Player::CheckColli(Map& map_data)
 	//cout<<x_pos_<<" "<<y_pos_<<"\n";
 	//cout<<on_ground_<<" ";
 }
+
 
 void Player::CenterEntityOnMap(Map& map_data)// set start_x_y// camera
 {

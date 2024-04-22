@@ -8,7 +8,7 @@
 #define PLAYER_SPEED 8
 #define PLAYER_JUMP_SPEED 20
 #define DASH_SPEED 20
-const int num_sprite[]={4,6,4,4,6,4};
+const int num_sprite[]={4,6,4,4,6,4,7};
 class Boss1;// chatGPT
 class Bullet;
 class Player: public BaseObject
@@ -24,7 +24,8 @@ public:
 		JUMPUP = 2,
 		JUMPDOWN = 3,
 		ATTACK = 4,
-		DASH = 5
+		DASH = 5,
+		DEATH = 6
 	};
 	enum DIR
 	{
@@ -35,6 +36,11 @@ public:
 	SDL_Rect Box()
 	{
 		return {(int)(x_pos_ + 60), (int)(y_pos_ + 22), 30, 86 };//for 150x111
+	}
+	SDL_Rect AttackBox()
+	{
+		if(save_dir == RIGHT) return {x_pos_ + 67, y_pos_, 83, 95};
+		return {x_pos_, y_pos_, 83, 95};
 	}
 	void SetXY(int x, int y) {x_pos_ = x, y_pos_ = y;}
 	bool LoadImg(string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua
@@ -71,6 +77,7 @@ public:
 
 	int can_attack;
 	int pro_attack;
+	int active_attack;
 
 	int dash_pos;
 	int hit_wall;

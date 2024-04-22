@@ -29,7 +29,7 @@ const SDL_Color button_in = {255,255,211,255};
 const int fps = 40;
 
 bool overlap(SDL_Rect a, SDL_Rect b);
-
+int rnd(int l,int r);
 struct Input
 {
 	int left_;

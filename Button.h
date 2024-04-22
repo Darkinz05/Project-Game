@@ -11,7 +11,7 @@ public:
 	void Show(SDL_Renderer* des, TTF_Font* font, int type, string text);
 	bool GetAdvance() {return advance;}
 	void SetAdvance() {advance = 0;}
-private:
+//private:
 	bool is_hovered;
 	bool press = 0;
 	bool isInBound(int x, int y)

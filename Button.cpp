@@ -38,13 +38,29 @@ void Button::Show(SDL_Renderer* des, TTF_Font* font, int type, string text)
 {
 //	if(press) BaseObject::LoadImg("menu/Button_down.png",des);
 //	else BaseObject::LoadImg("menu/Button_up.png", des);
-	if(is_hovered == 0)
+	if(type == 1) // xu li text
 	{
-		BaseObject::LoadTTF(text, des, font, button_out);
+		if(is_hovered == 0)
+		{
+			BaseObject::LoadTTF(text, des, font, button_out);
+		}
+		else
+		{
+			BaseObject::LoadTTF(text, des, font, button_in);
+		}
 	}
-	else
+	else if(type == 2)
 	{
-		BaseObject::LoadTTF(text, des, font, button_in);
+		if(is_hovered == 0)
+		{
+			text = text + ".png";
+		}
+		else
+		{
+			text = text + "-hv.png";
+		}
+		//cout<<text<<"\n";
+		BaseObject::LoadImg(text, des);
 	}
 
 	BaseObject::Render(des);

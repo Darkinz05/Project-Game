@@ -24,15 +24,23 @@ public:
 	}
 	SDL_Rect Box()
 	{
-		return {rect_.x + box_x, rect_.y + box_y, box_w, box_h};
+		return {(int)x_pos_ + box_x, (int)y_pos_ + box_y, box_w, box_h};
 	}
 	void Move(const int x_border = SCREEN_WIDTH, const int y_border = SCREEN_HEIGHT);
-
+	void Show(SDL_Renderer* des, int type);
+	void SetMapXY(const int map_x, const int map_y) {map_x_ = map_x; map_y_ = map_y;}
 //private:
+
 	int frame_cur_;
+	float x_pos_;
+	float y_pos_;
 	int x_val_;
 	int y_val_;
+
 	int box_x, box_y, box_w, box_h;
 	bool is_move;
 	int dir;
+
+	int map_x_;
+	int map_y_;
 };
