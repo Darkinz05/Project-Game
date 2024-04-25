@@ -21,6 +21,7 @@ SDL_Renderer* g_screen;
 TTF_Font* menu_font = NULL;
 TTF_Font* boss_font = NULL;
 TTF_Font* announce_font = NULL;
+//TTF_Font* paused_font = NULL;
 
 Mix_Music* title_music = NULL;
 Mix_Music* boss1_music = NULL;
@@ -37,14 +38,14 @@ Mix_Chunk* boss1_death = NULL;
 int MAX_MAP_X = 20;
 int MAX_MAP_Y = 14;
 BaseObject g_background;
-
 enum GAMESCENE
 {
 	MENU = 0,
 	MAP1 = 1,
 	MAP2 = 2,
 	Map3 = 3,
-	SELECT = 4
+	TUTORIAL = 4,
+	SELECT = 5
 
 };
 bool Init()
@@ -118,18 +119,19 @@ void Close()
 
 Player player;
 GameMap game_map;
-bool load_map1, load_select, load_map2;
+
 
 BaseObject menu_background;
 BaseObject title_name;
 Button play_button, tutorial_button, achievements_button;
-Button home_button, home_map, sound_button, sound_map;
+Button home_button, sound_button, continue_button;
 
 bool LoadMedia()
 {
 	menu_font = TTF_OpenFont("Corda_W01_Medium.ttf", 80);
 	boss_font = TTF_OpenFont("Corda_W01_Medium.ttf", 30);
 	announce_font = TTF_OpenFont("Corda_W01_Medium.ttf", 140);
+	//paused_font = TTF_OpenFont("Corda_W01_Medium.ttf", 140);
 
 	boss1_music = Mix_LoadMUS("menu/boss1_mus.ogg");
 	title_music = Mix_LoadMUS("menu/title_mus.ogg");
@@ -149,15 +151,14 @@ bool LoadMedia()
 	tutorial_button.LoadTTF("Tutorial", g_screen, menu_font, button_out);
 	achievements_button.LoadTTF("Achievements", g_screen, menu_font, button_out);
 	home_button.LoadImg("menu/home_button.png", g_screen);
-	home_map.LoadImg("menu/home_button.png", g_screen);
 	sound_button.LoadImg("menu/sound_button.png", g_screen);
-	sound_map.LoadImg("menu/sound_button.png", g_screen);
+	continue_button.LoadImg("menu/continue_button.png", g_screen);
 	title_name.LoadImg("menu/Title.png", g_screen);
 
 
 	return 1;
 }
-
+bool load_map1, load_select, load_map2, load_tutorial;
 Button map1_button;
 Button map2_button;
 void LoadSelect()
@@ -167,6 +168,7 @@ void LoadSelect()
 	map1_button.LoadImg("menu/Map1.png", g_screen);
 	map2_button.LoadImg("menu/Map2.png", g_screen);
 }
+
 BaseObject soul;
 bool soul_playing, soul_took;
 void PlaySoul()
@@ -198,6 +200,27 @@ void LoadMap2()
 	soul_took = 0;
 	soul_playing = 0;
 }
+
+BaseObject dummy;
+int frame_dum, play_dum, st_dum;
+void LoadTutorial()
+{
+	g_background.LoadImg("map/Tutorial/backtile.png", g_screen);
+	game_map.LoadMap("map/Tutorial/map_tut.txt");
+	game_map.LoadTiles(g_screen,"map/Tutorial/tile");
+	dummy.LoadImg("map/Tutorial/dummy-0.png", g_screen);
+	dummy.x_pos_ = 2300;
+	dummy.y_pos_ = 492;
+	frame_dum = 0;
+	soul.LoadImg("map/soul.png", g_screen);
+
+	soul.x_pos_ = 3150;
+	soul.y_pos_ = 500;
+
+	soul_took = 0;
+	soul_playing = 0;
+}
+
 int scene = 0;
 int volume_up = 0;
 void TurnVolume()
@@ -227,6 +250,7 @@ void TurnVolume()
 	}
 	volume_up = 1 - volume_up;
 }
+bool paused = 0;
 void ChangeScene()
 {
 	int pre = scene;
@@ -239,36 +263,77 @@ void ChangeScene()
 			play_button.advance = 0;
 			scene = SELECT;
 		}
+		if(tutorial_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			tutorial_button.advance = 0;
+			scene = TUTORIAL;
+		}
 		break;
 	case MAP1:
-		if(home_map.GetAdvance())
+		if(home_button.GetAdvance() && paused == 0)
 		{
 			Mix_PlayChannel(-1, menu_sfx, 0);
-			Mix_PlayMusic(title_music, -1);
-			home_map.advance = 0;
-			scene = SELECT;
+			Mix_PauseMusic();
+			//Mix_PlayMusic(title_music, -1);
+			home_button.advance = 0;
+			//scene = SELECT;
+			paused = 1;
 		}
-		if(sound_map.GetAdvance())
+		if(home_button.GetAdvance() && paused == 1)
 		{
 			Mix_PlayChannel(-1, menu_sfx, 0);
-			sound_map.advance = 0;
+			home_button.advance = 0;
+			Mix_PlayMusic(title_music, -1);
+			scene = SELECT;
+			paused = 0;
+		}
+		if(paused == 1 && continue_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			continue_button.advance = 0;
+			Mix_ResumeMusic();
+			paused = 0;
+		}
+		if(sound_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			sound_button.advance = 0;
 			TurnVolume();
 		}
 		break;
 	case MAP2:
-		if(home_map.GetAdvance())
+		if(home_button.GetAdvance() && paused == 0)
 		{
 			Mix_PlayChannel(-1, menu_sfx, 0);
-			Mix_PlayMusic(title_music, -1);
-			home_map.advance = 0;
-			scene = SELECT;
+			Mix_PauseMusic();
+			//Mix_PlayMusic(title_music, -1);
+			home_button.advance = 0;
+			//scene = SELECT;
+			paused = 1;
 		}
-		if(sound_map.GetAdvance())
+		if(home_button.GetAdvance() && paused == 1)
 		{
 			Mix_PlayChannel(-1, menu_sfx, 0);
-			sound_map.advance = 0;
+			home_button.advance = 0;
+			Mix_PlayMusic(title_music, -1);
+			scene = SELECT;
+			paused = 0;
+		}
+		if(paused == 1 && continue_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			continue_button.advance = 0;
+			Mix_ResumeMusic();
+			paused = 0;
+		}
+		if(sound_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			sound_button.advance = 0;
 			TurnVolume();
 		}
+		break;
 	case SELECT:
 		if(home_button.GetAdvance())
 		{
@@ -300,6 +365,38 @@ void ChangeScene()
 		}
 
 		break;
+	case TUTORIAL:
+		if(home_button.GetAdvance() && paused == 0)
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			Mix_PauseMusic();
+			//Mix_PlayMusic(title_music, -1);
+			home_button.advance = 0;
+			//scene = SELECT;
+			paused = 1;
+		}
+		if(home_button.GetAdvance() && paused == 1)
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			home_button.advance = 0;
+			Mix_PlayMusic(title_music, -1);
+			scene = MENU;
+			paused = 0;
+		}
+		if(paused == 1 && continue_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			continue_button.advance = 0;
+			Mix_ResumeMusic();
+			paused = 0;
+		}
+		if(sound_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			sound_button.advance = 0;
+			TurnVolume();
+		}
+		break;
 	}
 
 	if(pre != scene)
@@ -307,7 +404,36 @@ void ChangeScene()
 		load_select = 0;
 		load_map1 = 0;
 		load_map2 = 0;
+		load_tutorial = 0;
 	}
+}
+
+void PausedMenu()
+{
+	SDL_Rect mask = {0,0,SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_Rect box_;
+	box_ = {350, 150, 600, 400};
+	SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
+	SDL_RenderFillRect(g_screen, &box_);
+
+	box_ = {box_.x + 10, box_.y + 10, 580, 180};
+	SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
+	SDL_RenderFillRect(g_screen, &box_);
+
+	box_ = {box_.x , box_.y +box_.h+ 10, 580, 190};
+	SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
+	SDL_RenderFillRect(g_screen, &box_);
+
+	BaseObject paused_an;
+	SDL_Color Black = {0,0,0};
+	paused_an.LoadTTF("PAUSED", g_screen, announce_font, Black);
+	paused_an.SetPos(400,150);
+	paused_an.Render(g_screen);
+	continue_button.SetRect(470, 400, 120, 80);
+	continue_button.Render(g_screen);
+
+	home_button.SetRect(700, 400, 120, 80);
+	home_button.Render(g_screen);
 }
 BaseObject fron1, fron2;
 //deathscene
@@ -365,11 +491,15 @@ int main(int argc, char *argv[])
 					{
 						quit = true;
 					}
+					continue_button.HandleInput(e);
+					home_button.HandleInput(e);
+					sound_button.HandleInput(e);
+					if(paused) continue;
 					if(e.key.keysym.sym == SDLK_o) boss1.health = 0;
-					//cout<<home_map.advance<<"\n";
+					//cout<<home_button.advance<<"\n";
 					player.HandleInputAction(e);
-					home_map.HandleInput(e);
-					sound_map.HandleInput(e);
+
+
 				}
 				const Uint8* keys = SDL_GetKeyboardState(NULL);
 				if(keys[SDL_SCANCODE_W])
@@ -393,11 +523,13 @@ int main(int argc, char *argv[])
 					{
 						quit = true;
 					}
-					if(e.key.keysym.sym == SDLK_o) boss1.health = 0, boss2.health = 0;//cheat kill boss
-					//cout<<home_map.advance<<"\n";
+					continue_button.HandleInput(e);
+					home_button.HandleInput(e);
+					sound_button.HandleInput(e);
+					if(paused) continue;
+					if(e.key.keysym.sym == SDLK_o) boss2.health = 0;
+					//cout<<home_button.advance<<"\n";
 					player.HandleInputAction(e);
-					home_map.HandleInput(e);
-					sound_map.HandleInput(e);
 				}
 				const Uint8* keys = SDL_GetKeyboardState(NULL);
 				if(keys[SDL_SCANCODE_W])
@@ -432,7 +564,35 @@ int main(int argc, char *argv[])
 				}
 				break;
 			}
-
+		case TUTORIAL:
+			{
+				if(load_tutorial == 0)
+				{
+					MAX_MAP_X = 58;
+					MAX_MAP_Y = 16;
+					LoadTutorial();
+					load_tutorial = 1;
+					player.Reset();
+				}
+				while(SDL_PollEvent(&e) != 0)
+				{
+					if(e.type == SDL_QUIT)
+					{
+						quit = true;
+					}
+					continue_button.HandleInput(e);
+					home_button.HandleInput(e);
+					sound_button.HandleInput(e);
+					if(paused) continue;
+					//cout<<home_button.advance<<"\n";
+					player.HandleInputAction(e);
+				}
+				const Uint8* keys = SDL_GetKeyboardState(NULL);
+				if(keys[SDL_SCANCODE_W])
+				{
+					player.input_type_.jump_ = 1;
+				}
+			}
 		}
 
 		//logic
@@ -456,20 +616,29 @@ int main(int argc, char *argv[])
 				title_name.SetPos((SCREEN_WIDTH-title_name.rect_.w)/2,5);
 				title_name.Render(g_screen);
 				//button
+
 				play_button.SetPos(SCREEN_WIDTH/2 - play_button.GetRect().w/2, 260);
-				SDL_Rect box_ = play_button.rect_;box_.x -= 10; box_.w += 20;
+				SDL_Rect box_ = play_button.rect_;box_.x -= 16; box_.w += 32; box_.y -= 8; box_.h += 16;
+				SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
+				SDL_RenderFillRect(g_screen, &box_);
+				box_ = play_button.rect_;box_.x -= 10; box_.w += 20;
+				SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
 				SDL_RenderFillRect(g_screen, &box_);
 				play_button.Show(g_screen, menu_font, 1, "Play");
 
-				tutorial_button.SetPos(SCREEN_WIDTH/2 - tutorial_button.GetRect().w/2, 260 + play_button.rect_.h + 5);
+				tutorial_button.SetPos(SCREEN_WIDTH/2 - tutorial_button.GetRect().w/2, 260 + play_button.rect_.h + 20);
+				box_ = tutorial_button.rect_;box_.x -= 16; box_.w += 32; box_.y -= 8; box_.h += 16;
+				SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
+				SDL_RenderFillRect(g_screen, &box_);
 				box_ = tutorial_button.rect_;box_.x -= 10; box_.w += 20;
+				SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
 				SDL_RenderFillRect(g_screen, &box_);
 				tutorial_button.Show(g_screen, menu_font, 1, "Tutorial");
 
-				achievements_button.SetPos(SCREEN_WIDTH/2 - achievements_button.GetRect().w/2, tutorial_button.rect_.y + tutorial_button.rect_.h + 5);
-				box_ = achievements_button.rect_;box_.x -= 10; box_.w += 20;
-				SDL_RenderFillRect(g_screen, &box_);
-				achievements_button.Show(g_screen, menu_font, 1, "Achievements");
+//				achievements_button.SetPos(SCREEN_WIDTH/2 - achievements_button.GetRect().w/2, tutorial_button.rect_.y + tutorial_button.rect_.h + 5);
+//				box_ = achievements_button.rect_;box_.x -= 10; box_.w += 20;
+//				SDL_RenderFillRect(g_screen, &box_);
+//				achievements_button.Show(g_screen, menu_font, 1, "Achievements");
 				break;
 			}
 
@@ -492,13 +661,13 @@ int main(int argc, char *argv[])
 
 				//tes.Render(g_screen);
 				boss1.SetMapXY(map_data.start_x_, map_data.start_y_);
-				boss1.Interaction(player);
-				boss1.DoBoss(map_data, player, g_screen);
+				if(!paused) boss1.Interaction(player);
+				if(!paused) boss1.DoBoss(map_data, player, g_screen);
 				boss1.Show(g_screen);
 
 				player.SetMapXY(map_data.start_x_, map_data.start_y_);
-				player.Interaction1(boss1);
-				player.DoPlayer(map_data);
+				if(!paused) player.Interaction1(boss1);
+				if(!paused) player.DoPlayer(map_data);
 				player.Show(g_screen);
 
 				boss1.ShowHealthBar(g_screen, boss_font);
@@ -506,20 +675,31 @@ int main(int argc, char *argv[])
 
 				game_map.SetMap(map_data);
 				//game_map.DrawMap(g_screen);
-				home_map.SetPos(290, 19);
-				home_map.Show(g_screen,NULL,2,"menu/home_button");
 
-				sound_map.SetPos(370,19);
-				sound_map.Show(g_screen,NULL,2,"menu/sound_button");
+				if(!paused)
+				{
+					home_button.SetPos(290, 19);
+					home_button.Show(g_screen,NULL,2,"menu/home_button");
+
+					sound_button.SetPos(370,19);
+					sound_button.Show(g_screen,NULL,2,"menu/sound_button");
+				}
+				else
+				{
+					PausedMenu();
+
+				}
+				//cout<<continue_button.is_hovered<<"\n";
 				break;
 			}
 		case MAP2:
 			{
 				g_background.Render(g_screen);
 				Map map_data = game_map.GetMap();
+
 				boss2.SetMapXY(map_data.start_x_, map_data.start_y_);
-				boss2.Interaction(player);
-				boss2.DoBoss(map_data, player, g_screen);
+				if(!paused) boss2.Interaction(player);
+				if(!paused) boss2.DoBoss(map_data, player, g_screen);
 				boss2.Show(g_screen);
 				game_map.DrawMap(g_screen);
 
@@ -540,19 +720,28 @@ int main(int argc, char *argv[])
 
 
 				player.SetMapXY(map_data.start_x_, map_data.start_y_);
-				player.Interaction1(boss1);
-				player.DoPlayer(map_data);
+
+				if(!paused) player.Interaction2(boss2);
+				if(!paused) player.DoPlayer(map_data);
 				player.Show(g_screen);
 
 				boss2.ShowHealthBar(g_screen, boss_font);
 				player.ShowHealthBar(g_screen);
 				game_map.SetMap(map_data);
 
-				home_map.SetPos(290, 19);
-				home_map.Show(g_screen,NULL,2,"menu/home_button");
+				if(!paused)
+				{
+					home_button.SetPos(290, 19);
+					home_button.Show(g_screen,NULL,2,"menu/home_button");
 
-				sound_map.SetPos(370,19);
-				sound_map.Show(g_screen,NULL,2,"menu/sound_button");
+					sound_button.SetPos(370,19);
+					sound_button.Show(g_screen,NULL,2,"menu/sound_button");
+				}
+				else
+				{
+					PausedMenu();
+
+				}
 				break;
 			}
 		case SELECT:
@@ -571,9 +760,68 @@ int main(int argc, char *argv[])
 				sound_button.Show(g_screen,NULL,2,"menu/sound_button");
 				break;
 			}
+		case TUTORIAL:
+			{
+				//g_background.Render(g_screen);
+
+				Map map_data = game_map.GetMap();
+				SDL_Rect clip = {map_data.start_x_, map_data.start_y_,SCREEN_WIDTH,SCREEN_HEIGHT};
+				SDL_Rect renderQuad = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
+				SDL_RenderCopy(g_screen, g_background.p_object_, &clip, &renderQuad);
+
+				dummy.SetMapXY(map_data.start_x_, map_data.start_y_);
+
+				if(player.active_attack && overlap(player.AttackBox(), {dummy.x_pos_, dummy.y_pos_, dummy.rect_.w, dummy.rect_.h}) && play_dum == 0) st_dum = 1;
+				if(player.active_attack && !overlap(player.AttackBox(), {dummy.x_pos_, dummy.y_pos_, dummy.rect_.w, dummy.rect_.h})) if(Mix_Playing(5) == 0) Mix_PlayChannel(5, player_miss, 0);
+				if(st_dum == 1)
+				{
+					play_dum = 1;
+					st_dum = 0;
+					frame_dum = 0;
+					if(Mix_Playing(5) == 0) Mix_PlayChannel(5, player_hit, 0);
+				}
+				if(play_dum)
+				{
+					frame_dum++;
+				}
+
+				string paht = "map/Tutorial/dummy-" + to_string(frame_dum/4) + ".png";
+				dummy.LoadImg(paht, g_screen);
+				dummy.Show(g_screen);
+				if(frame_dum == 4*4 - 1) play_dum = 0;
+
+				soul.SetMapXY(map_data.start_x_, map_data.start_y_);
+				if(overlap(player.Box(), {soul.x_pos_, soul.y_pos_, soul.rect_.w, soul.rect_.h})) soul_took = 1;
+				if(soul_took == 0) soul.Show(g_screen);
+
+
+
+				game_map.DrawMap(g_screen);
+
+
+				player.SetMapXY(map_data.start_x_, map_data.start_y_);
+				if(!paused) player.DoPlayer(map_data);
+				player.Show(g_screen);
+				player.ShowHealthBar(g_screen);
+				game_map.SetMap(map_data);
+
+				if(!paused)
+				{
+					home_button.SetPos(290, 19);
+					home_button.Show(g_screen,NULL,2,"menu/home_button");
+
+					sound_button.SetPos(370,19);
+					sound_button.Show(g_screen,NULL,2,"menu/sound_button");
+				}
+				else
+				{
+					PausedMenu();
+				}
+				break;
+			}
 		}
 
-		if(scene>=1&&scene<=3)//death scene
+		if(scene>=1&&scene<=4)//death scene
 		{
 			if(player.status_ == Player::DEATH)
 			{
@@ -633,7 +881,6 @@ int main(int argc, char *argv[])
 					scene = SELECT;
 					d_started = 0;
 				}
-
 			}
 		}
 

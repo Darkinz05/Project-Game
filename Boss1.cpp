@@ -9,6 +9,8 @@ extern Mix_Chunk* player_hit;
 extern Mix_Chunk* player_miss;
 extern Mix_Chunk* boss1_attack;
 extern Mix_Chunk* boss1_death;
+
+extern bool paused;
 Boss1::Boss1()
 {
 	frame_cur_ = 0;
@@ -57,7 +59,7 @@ void Boss1::AdvanceState()
 void Boss1::Show(SDL_Renderer* des)
 {
 	if(pre_status_ != status_) frame_cur_ = 0;
-	else frame_cur_++;
+	else if(paused == 0) frame_cur_++;
 	pre_status_ = status_;
 	//cout<<status_<<" "<<x_pos_<<" "<<y_pos_<<"\n";
 	//cout<<frame_cur_<<"\n";
@@ -99,7 +101,7 @@ void Boss1::Show(SDL_Renderer* des)
 		if(frame_cur_ == 3*num_sprite1[status_]-1)
 		{
 			status_ = IDLE;
-			rest_time = rnd(2,3);
+			rest_time = rnd(1,3);
 			melee = 0;
 			//cout<<22323<<"\n";
 		}
@@ -207,7 +209,7 @@ void Boss1::ShowBullet(SDL_Renderer* des)
 			int type = 0;
 			if(x->dir == Bullet::BLEFT || x->dir == Bullet::BRIGHT) type = 0;
 			else type = 2;
-			x->Move();
+			if(paused ==0 ) x->Move();
 			x->Show(des, type);
 
 		}
@@ -351,7 +353,7 @@ void Boss1::DoBoss(Map& map_data, Player& player, SDL_Renderer* des)
 			//SDL_Rect tBox = blet.Box(66, 69, 179, 65);
 			//blet.SetPos(rect_.x, rect_.y + 50);
 			blet.x_pos_ = player.rect_.x;
-			blet.y_pos_ = -200;
+			blet.y_pos_ = -100;
 
 		blet.is_move = 1;
 		bullet_list.push_back(blet);

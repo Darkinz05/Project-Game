@@ -88,9 +88,7 @@ void GameMap::DrawMap(SDL_Renderer* screen)
 			if(val)
 			{
 				tile_mat[val].SetRect(j,i,TILE_SIZE,TILE_SIZE);
-
 				tile_mat[val].Render(screen);
-
 			}
 			map_x++;
 

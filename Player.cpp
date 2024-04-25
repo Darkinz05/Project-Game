@@ -1,12 +1,14 @@
 
 #include "Player.h"
 #include "Boss1.h"
+#include "Boss2.h"
 #include "Bullet.h"
 
 extern int MAX_MAP_X;
 extern int MAX_MAP_Y;
 
 extern Mix_Chunk* player_hurt;
+extern bool paused;
 Player::Player()
 {
 	frame_cur_ = 0;
@@ -122,7 +124,7 @@ void Player::Show(SDL_Renderer* des)
 
 
 	if(pre_status_ != status_) frame_cur_ = 0;
-	else frame_cur_++;
+	else if(paused == 0) frame_cur_++;
 	pre_status_ = status_;
 	//cout<<status_<<" ";
 	if(status_ == JUMPUP || status_ == JUMPDOWN)
@@ -298,11 +300,35 @@ void Player::Interaction1(Boss1& boss1)
 	{
 		invincible--;
 	}
-
-
-
 }
+void Player::Interaction2(Boss2 &boss2)
+{
+	if(invincible == 0)
+	{
+		int get_hit = 0;
+		//cout<<boss2.frame_eff_<<"\n";
+		if(boss2.status_ == Boss2::SLAM && boss2.frame_eff_ >= 2*10 - 1)// const
+		{
+			SDL_Rect box = {boss2.x_pos_ + 60 + 90, boss2.y_pos_ + 60 + 25, 180, 302};
+			if(overlap(Box(), box)) get_hit = 1;
 
+			box = {boss2.x_pos_ + 60 + 18, boss2.y_pos_ + 60 + 105, 323, 142};
+			if(overlap(Box(), box)) get_hit = 1;
+		}
+
+		if(get_hit && health > 0)
+		{
+			health--;
+			invincible = 50;
+			Mix_PlayChannel(-1, player_hurt, 0);
+		}
+
+	}
+	else
+	{
+		invincible--;
+	}
+}
 void Player::DoPlayer(Map& map_data)
 {
 
@@ -343,7 +369,7 @@ void Player::DoPlayer(Map& map_data)
 	else if(status_ == DEATH)
 	{
 		x_val_ = 0;
-		y_val_ = 0;
+		//y_val_ = 0;
 		input_type_.left_ = 0;
 		input_type_.right_ = 0;
 		input_type_.up_ = 0;
@@ -373,7 +399,7 @@ void Player::DoPlayer(Map& map_data)
 	}
 
 	//
-	if(status_ != DEATH)
+	//if(status_ != DEATH)
 	{
 		CheckColli(map_data);
 		CenterEntityOnMap(map_data);

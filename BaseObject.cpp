@@ -40,6 +40,18 @@ bool BaseObject::LoadImg(std::string path, SDL_Renderer* screen)
 	return p_object_ != NULL;
 }
 
+void BaseObject::Show(SDL_Renderer* des)
+{
+	rect_.x = x_pos_ - map_x_;
+	rect_.y = y_pos_ - map_y_;
+
+	SDL_Rect renderQuad = {rect_.x, rect_.y, rect_.w, rect_.h};// tao tu hu khong -> ko dung pointer
+	//cout<<renderQuad.x<<" "<<renderQuad.y<<" "<<renderQuad.w<<" "<<renderQuad.h<<"\n";
+	//cout<<x_pos_<<" "<<map_x_<<"    "<<y_pos_<< " "<<map_y_<<"\n";
+	SDL_RendererFlip flip_type = SDL_FLIP_NONE;
+
+	SDL_RenderCopyEx(des, p_object_, NULL, &renderQuad, 0, NULL, flip_type);
+}
 bool BaseObject::LoadTTF(std::string text, SDL_Renderer* screen, TTF_Font* font, SDL_Color text_color)
 {
 	Free();

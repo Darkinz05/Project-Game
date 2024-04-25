@@ -10,6 +10,7 @@
 #define DASH_SPEED 20
 const int num_sprite[]={4,6,4,4,6,4,7};
 class Boss1;// chatGPT
+class Boss2;
 class Bullet;
 class Player: public BaseObject
 {
@@ -50,15 +51,13 @@ public:
 	void SetClip();
 	void DoPlayer(Map& map_data);
 	void Interaction1(Boss1& boss1);
+	void Interaction2(Boss2& boss2);
 	void CheckColli(Map& map_data);
 	void SetMapXY(const int map_x, const int map_y) {map_x_ = map_x; map_y_ = map_y;}
 	void CenterEntityOnMap(Map& map_data);
 //private:
 	float x_val_;// velocity
 	float y_val_;
-
-	float x_pos_;
-	float y_pos_;
 
 	int width_frame_;
 	int height_frame_;

@@ -8,7 +8,7 @@
 #define BOSS_CAP_SPEED 20
 #define BOSS_SPEED 6
 
-const int num_sprite2[]={4,14};
+const int num_sprite2[]={4,10,1,1,1,14};
 class Player;
 class Bullet;
 class Boss2: public BaseObject
@@ -24,7 +24,8 @@ public:
 	enum STATE
 	{
 		IDLE = 0,
-		DEATH = 1
+		SLAM = 1,
+		DEATH = 5
 	};
 	SDL_Rect Box()
 	{
@@ -41,6 +42,7 @@ public:
 	void Show(SDL_Renderer* des);
 	void ShowHealthBar(SDL_Renderer* des, TTF_Font* g_font);
 	void ShowBullet(SDL_Renderer* des);
+	void ShowEffect(SDL_Renderer* des);
 	void AdvanceState();
 	void DoBoss(Map& map_data, Player& player, SDL_Renderer* des);
 	void Interaction(Player& player);
@@ -56,6 +58,7 @@ public:
 	int height_frame_;
 
 	int frame_cur_;
+	int frame_eff_;
 	int status_;
 	int pre_status_;
 	bool on_ground_;
@@ -76,6 +79,7 @@ public:
 	int spell_wait;
 	int can_gensp;
 
+	int st_eff;
 	int map_x_;
 	int map_y_;
 };

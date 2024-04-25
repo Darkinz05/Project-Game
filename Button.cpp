@@ -62,6 +62,11 @@ void Button::Show(SDL_Renderer* des, TTF_Font* font, int type, string text)
 		//cout<<text<<"\n";
 		BaseObject::LoadImg(text, des);
 	}
+	else if(type == 3)
+	{
+		text = text + ".png";
+		BaseObject::LoadImg(text, des);
+	}
 
 	BaseObject::Render(des);
 }

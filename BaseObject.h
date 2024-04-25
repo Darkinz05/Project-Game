@@ -23,6 +23,8 @@ public:
 	SDL_Texture* GetObject() const {return p_object_;}
 
 	virtual bool LoadImg(std::string path, SDL_Renderer* screen);// dung loadImg nhung co chinh sua trong cac lop con
+	virtual void SetMapXY(const int map_x, const int map_y) {map_x_ = map_x; map_y_ = map_y;}
+	virtual void Show(SDL_Renderer* des);
 	bool LoadTTF(std::string text, SDL_Renderer* screen, TTF_Font* font, SDL_Color text_color);
 	void Render(SDL_Renderer* des,const SDL_Rect* clip = NULL);
 	void Free();
@@ -30,5 +32,9 @@ public:
 //protected:
 	SDL_Texture* p_object_;
 	SDL_Rect rect_;
+	float x_pos_;
+	float y_pos_;
 
+	int map_x_;
+	int map_y_;
 };

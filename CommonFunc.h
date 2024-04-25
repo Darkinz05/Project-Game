@@ -12,7 +12,7 @@ using namespace std;
 
 #define SCREEN_WIDTH 	1280
 #define SCREEN_HEIGHT	704
-#define GAME_NAME 		"GAME"
+#define GAME_NAME 		"SOULS LITE"
 
 const int keyR = 54;
 const int keyG = 136;
