@@ -424,7 +424,7 @@
 
 1710066933 source:c:\users\dell\documents\code\ltnc\project-game\baseobj.cpp
 
-1714070470 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
+1714142387 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
 	"CommonFunc.h"
 	"BaseObject.h"
 	"GameMap.h"
@@ -484,7 +484,7 @@
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1714100912 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
+1714130635 source:c:\users\dell\documents\code\ltnc\project-game\player.cpp
 	"Player.h"
 	"Boss1.h"
 	"Boss2.h"
@@ -498,10 +498,10 @@
 
 1712129382 source:c:\users\dell\documents\code\ltnc\project-game\enemy1.cpp
 
-1714042834 source:c:\users\dell\documents\code\ltnc\project-game\button.cpp
+1714135477 source:c:\users\dell\documents\code\ltnc\project-game\button.cpp
 	"Button.h"
 
-1713084002 c:\users\dell\documents\code\ltnc\project-game\button.h
+1714135286 c:\users\dell\documents\code\ltnc\project-game\button.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
@@ -514,19 +514,19 @@
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1714103374 source:c:\users\dell\documents\code\ltnc\project-game\bullet.cpp
+1714125593 source:c:\users\dell\documents\code\ltnc\project-game\bullet.cpp
 	"Bullet.h"
 
-1714103376 c:\users\dell\documents\code\ltnc\project-game\bullet.h
+1714125697 c:\users\dell\documents\code\ltnc\project-game\bullet.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1714118687 source:c:\users\dell\documents\code\ltnc\project-game\boss2.cpp
+1714135738 source:c:\users\dell\documents\code\ltnc\project-game\boss2.cpp
 	"Boss2.h"
 	"Player.h"
 	"Bullet.h"
 
-1714110568 c:\users\dell\documents\code\ltnc\project-game\boss2.h
+1714131069 c:\users\dell\documents\code\ltnc\project-game\boss2.h
 	"CommonFunc.h"
 	"BaseObject.h"
 

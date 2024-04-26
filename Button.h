@@ -23,4 +23,5 @@ public:
 		return true;
 	}
 	bool advance;
+	bool lock;
 };

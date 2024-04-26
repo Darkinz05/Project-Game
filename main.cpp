@@ -38,7 +38,8 @@ Mix_Chunk* boss1_death = NULL;
 
 int MAX_MAP_X = 20;
 int MAX_MAP_Y = 14;
-BaseObject g_background;
+BaseObject g_background, table_ach;
+
 enum GAMESCENE
 {
 	MENU = 0,
@@ -46,7 +47,8 @@ enum GAMESCENE
 	MAP2 = 2,
 	Map3 = 3,
 	TUTORIAL = 4,
-	SELECT = 5
+	SELECT = 5,
+	ACHIEVEMENTS = 6
 
 };
 bool Init()
@@ -121,11 +123,15 @@ void Close()
 Player player;
 GameMap game_map;
 
-
+BaseObject Lock;
+BaseObject line;
+BaseObject ach1, ach2, ach3, ach4, ach5;
+bool ach1_lock, ach2_lock, ach3_lock, ach4_lock, ach5_lock;
 BaseObject menu_background;
 BaseObject title_name;
-Button play_button, tutorial_button, achievements_button;
-Button home_button, sound_button, continue_button;
+Button play_button, tutorial_button, achievements_button, reset_button;// ttf
+Button home_button, sound_button, continue_button;// img
+
 
 bool LoadMedia()
 {
@@ -149,15 +155,23 @@ bool LoadMedia()
 
 
 	menu_background.LoadImg("menu/Menu_background.png", g_screen);
+	table_ach.LoadImg("menu/table_ach.png", g_screen);
+	line.LoadTTF("Play", g_screen, boss_font, button_out);
+	Lock.LoadImg("menu/lock.png", g_screen);
 	play_button.LoadTTF("Play", g_screen, menu_font, button_out);
 	tutorial_button.LoadTTF("Tutorial", g_screen, menu_font, button_out);
 	achievements_button.LoadTTF("Achievements", g_screen, menu_font, button_out);
+	reset_button.LoadTTF("Reset", g_screen, menu_font, button_out);
 	home_button.LoadImg("menu/home_button.png", g_screen);
 	sound_button.LoadImg("menu/sound_button.png", g_screen);
 	continue_button.LoadImg("menu/continue_button.png", g_screen);
 	title_name.LoadImg("menu/Title.png", g_screen);
 
-
+	ach1.LoadImg("menu/ach1.png", g_screen);
+	ach2.LoadImg("menu/ach2.png", g_screen);
+	ach3.LoadImg("menu/ach3.png", g_screen);
+	ach4.LoadImg("menu/ach4.png", g_screen);
+	ach5.LoadImg("menu/ach5.png", g_screen);
 	return 1;
 }
 bool load_map1, load_select, load_map2, load_tutorial;
@@ -169,6 +183,8 @@ void LoadSelect()
 	g_background.SetRect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
 	map1_button.LoadImg("menu/Map1.png", g_screen);
 	map2_button.LoadImg("menu/Map2.png", g_screen);
+
+
 }
 
 BaseObject soul;
@@ -270,6 +286,23 @@ void ChangeScene()
 			Mix_PlayChannel(-1, menu_sfx, 0);
 			tutorial_button.advance = 0;
 			scene = TUTORIAL;
+		}
+		if(achievements_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			achievements_button.advance = 0;
+			scene = ACHIEVEMENTS;
+		}
+		if(reset_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			reset_button.advance = 0;
+			map2_button.lock = 1;
+			ach1_lock = 1;
+			ach2_lock = 1;
+			ach3_lock = 1;
+			ach4_lock = 1;
+			ach5_lock = 1;
 		}
 		break;
 	case MAP1:
@@ -399,6 +432,14 @@ void ChangeScene()
 			TurnVolume();
 		}
 		break;
+	case ACHIEVEMENTS:
+		if(home_button.GetAdvance())
+		{
+			Mix_PlayChannel(-1, menu_sfx, 0);
+			home_button.advance = 0;
+			scene = MENU;
+		}
+		break;
 	}
 
 	if(pre != scene)
@@ -442,6 +483,37 @@ BaseObject fron1, fron2;
 int d_started, d_opa, d_opa_ann, d_frame;
 
 int fron1_offset, fron2_offset;
+
+void SaveGame()
+{
+	ofstream fout;
+	fout.open("savegame.txt");
+	if(fout)
+	{
+		fout<<map2_button.lock<<"\n";
+		fout<<ach1_lock<<"\n";
+		fout<<ach2_lock<<"\n";
+		fout<<ach3_lock<<"\n";
+		fout<<ach4_lock<<"\n";
+		fout<<ach5_lock<<"\n";
+	}
+}
+
+void LoadGame()
+{
+	ifstream fin;
+	fin.open("savegame.txt");
+	int info;
+	fin>>info; map2_button.lock = info;
+	fin>>info; ach1_lock = info;
+	fin>>info; ach2_lock = info;
+	fin>>info; ach3_lock = info;
+	fin>>info; ach4_lock = info;
+	fin>>info; ach5_lock = info;
+
+}
+
+
 int main(int argc, char *argv[])
 {
 	Timer time;
@@ -452,9 +524,13 @@ int main(int argc, char *argv[])
 	int next_scene = 0;
 
 	TurnVolume();
+	map2_button.lock = 1;
+	ach1_lock = ach2_lock = ach3_lock = ach4_lock = ach5_lock = 1;
+
+
+	LoadGame();
 	while(!quit)
 	{
-
 		//cout<<1<<" ";
 		time.start();
 		ChangeScene();// *warning*
@@ -474,6 +550,7 @@ int main(int argc, char *argv[])
 				play_button.HandleInput(e);
 				tutorial_button.HandleInput(e);
 				achievements_button.HandleInput(e);
+				reset_button.HandleInput(e);
 			}
 
 			break;
@@ -529,7 +606,7 @@ int main(int argc, char *argv[])
 					home_button.HandleInput(e);
 					sound_button.HandleInput(e);
 					if(paused) continue;
-					if(e.key.keysym.sym == SDLK_o) boss2.health = 0;
+					if(e.key.keysym.sym == SDLK_o) boss2.health = 16;
 					//cout<<home_button.advance<<"\n";
 					player.HandleInputAction(e);
 				}
@@ -560,7 +637,7 @@ int main(int argc, char *argv[])
 						quit = true;
 					}
 					map1_button.HandleInput(e);
-					map2_button.HandleInput(e);
+					if(!map2_button.lock) map2_button.HandleInput(e);
 					home_button.HandleInput(e);
 					sound_button.HandleInput(e);
 				}
@@ -593,6 +670,17 @@ int main(int argc, char *argv[])
 				if(keys[SDL_SCANCODE_W])
 				{
 					player.input_type_.jump_ = 1;
+				}
+			}
+		case ACHIEVEMENTS:
+			{
+				while(SDL_PollEvent(&e) != 0)
+				{
+					if(e.type == SDL_QUIT)
+					{
+						quit = true;
+					}
+					home_button.HandleInput(e);
 				}
 			}
 		}
@@ -637,10 +725,24 @@ int main(int argc, char *argv[])
 				SDL_RenderFillRect(g_screen, &box_);
 				tutorial_button.Show(g_screen, menu_font, 1, "Tutorial");
 
-//				achievements_button.SetPos(SCREEN_WIDTH/2 - achievements_button.GetRect().w/2, tutorial_button.rect_.y + tutorial_button.rect_.h + 5);
-//				box_ = achievements_button.rect_;box_.x -= 10; box_.w += 20;
-//				SDL_RenderFillRect(g_screen, &box_);
-//				achievements_button.Show(g_screen, menu_font, 1, "Achievements");
+				achievements_button.SetPos(SCREEN_WIDTH/2 - achievements_button.GetRect().w/2, 260 + play_button.rect_.h + 20 + tutorial_button.rect_.h + 20);
+				box_ = achievements_button.rect_;box_.x -= 16; box_.w += 32; box_.y -= 8; box_.h += 16;
+				SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
+				SDL_RenderFillRect(g_screen, &box_);
+				box_ = achievements_button.rect_;box_.x -= 10; box_.w += 20;
+				SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
+				SDL_RenderFillRect(g_screen, &box_);
+				achievements_button.Show(g_screen, menu_font, 1, "Achievements");
+
+				reset_button.SetPos(40, 580);
+				box_ = reset_button.rect_;box_.x -= 16; box_.w += 32; box_.y -= 8; box_.h += 16;
+				SDL_SetRenderDrawColor(g_screen, 0, 0, 0, 255);
+				SDL_RenderFillRect(g_screen, &box_);
+				box_ = reset_button.rect_;box_.x -= 10; box_.w += 20;
+				SDL_SetRenderDrawColor(g_screen, 160, 160, 160, 180);
+				SDL_RenderFillRect(g_screen, &box_);
+				reset_button.Show(g_screen, menu_font, 1, "Reset");
+
 				break;
 			}
 
@@ -812,7 +914,7 @@ int main(int argc, char *argv[])
 					home_button.SetPos(290, 19);
 					home_button.Show(g_screen,NULL,2,"menu/home_button");
 
-					sound_button.SetPos(370,19);
+					sound_button.SetPos(100, 20);
 					sound_button.Show(g_screen,NULL,2,"menu/sound_button");
 				}
 				else
@@ -820,6 +922,92 @@ int main(int argc, char *argv[])
 					PausedMenu();
 				}
 				break;
+			}
+		case ACHIEVEMENTS:
+			{
+				menu_background.SetRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+				menu_background.Render(g_screen);
+
+				home_button.SetPos(20, 20);
+				home_button.Show(g_screen,NULL,2,"menu/home_button");
+
+				table_ach.SetPos(SCREEN_WIDTH/2 - table_ach.rect_.w/2, SCREEN_HEIGHT/2 - table_ach.rect_.h/2);
+				table_ach.Render(g_screen);
+
+				ach1.SetPos(table_ach.rect_.x+12, table_ach.rect_.y+12);
+				ach1.Render(g_screen);
+				if(ach1_lock)
+				{
+					Lock.SetPos(table_ach.rect_.x+12, table_ach.rect_.y+12);
+					Lock.Render(g_screen);
+				}
+
+				ach2.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12));
+				ach2.Render(g_screen);
+				if(ach2_lock)
+				{
+					Lock.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)+10);
+					Lock.Render(g_screen);
+				}
+
+				ach3.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)*2);
+				ach3.Render(g_screen);
+				if(ach3_lock)
+				{
+					Lock.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)*2+5);
+					Lock.Render(g_screen);
+				}
+
+				ach4.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)*3);
+				ach4.Render(g_screen);
+				if(ach4_lock)
+				{
+					Lock.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)*3-1);
+					Lock.Render(g_screen);
+				}
+
+				ach5.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)*4);
+				ach5.Render(g_screen);
+				if(ach5_lock)
+				{
+					Lock.SetPos(table_ach.rect_.x+12, table_ach.rect_.y + (ach1.rect_.h+12)*4-5);
+					Lock.Render(g_screen);
+				}
+
+				line.LoadTTF("FIRST STEP", g_screen, boss_font, button_out);
+				line.SetPos(340, 60);
+				line.Render(g_screen);
+				line.LoadTTF("Finish Tutorial.", g_screen, boss_font, button_out);
+				line.SetPos(340, 120);
+				line.Render(g_screen);
+
+				line.LoadTTF("WARRIOR I", g_screen, boss_font, button_out);
+				line.SetPos(340, 183);
+				line.Render(g_screen);
+				line.LoadTTF("Defeat the Frost Guardian.", g_screen, boss_font, button_out);
+				line.SetPos(340, 243);
+				line.Render(g_screen);
+
+				line.LoadTTF("WARRIOR II", g_screen, boss_font, button_out);
+				line.SetPos(340, 306);
+				line.Render(g_screen);
+				line.LoadTTF("Defeat the Stone Golem.", g_screen, boss_font, button_out);
+				line.SetPos(340, 366);
+				line.Render(g_screen);
+
+				line.LoadTTF("PERFECTIONIST I", g_screen, boss_font, button_out);
+				line.SetPos(340, 429);
+				line.Render(g_screen);
+				line.LoadTTF("Defeat the Frost Guardian taking no hit.", g_screen, boss_font, button_out);
+				line.SetPos(340, 489);
+				line.Render(g_screen);
+
+				line.LoadTTF("PERFECTIONIST II", g_screen, boss_font, button_out);
+				line.SetPos(340, 552);
+				line.Render(g_screen);
+				line.LoadTTF("Defeat the Stone Golem taking no hit.", g_screen, boss_font, button_out);
+				line.SetPos(340, 612);
+				line.Render(g_screen);
 			}
 		}
 
@@ -864,6 +1052,20 @@ int main(int argc, char *argv[])
 			}
 			else if(soul_took)
 			{
+				map2_button.lock = 0;
+				if(scene == TUTORIAL) ach1_lock = 0;
+				else if(scene == MAP1)
+				{
+					ach2_lock = 0;
+					if(player.health == 4) ach4_lock = 0;
+				}
+				else if(scene == MAP2)
+				{
+					ach3_lock = 0;
+					if(player.health == 4) ach5_lock = 0;
+				}
+
+
 				if(d_started == 0)
 				{
 					Mix_HaltMusic();
@@ -906,7 +1108,7 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
-
+		//cout<<map2_button.lock<<" ";
 		SDL_RenderPresent(g_screen);
 		int pass_tick = time.getTicks();
 
@@ -917,6 +1119,7 @@ int main(int argc, char *argv[])
 			SDL_Delay(time_per_frame - pass_tick);
 		}
 	}
+	SaveGame();
 
 	Close();
 

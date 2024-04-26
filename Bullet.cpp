@@ -55,7 +55,7 @@ void Bullet::Show(SDL_Renderer* des, int type)
 	}
 	string path = "map/Boss1/Boss-bullet-" + to_string(frame_cur_/5) + ".png";
 	if(type == 2) path = "map/Boss1/Boss-bullet2-" + to_string(frame_cur_/5) + ".png";
-	if(type == 3) path = "map/Boss2/bullet.png";
+	if(type == 3) path = name;
 	LoadImg(path, des);
 	rect_.x = x_pos_ - map_x_;
 	rect_.y = y_pos_ - map_y_;

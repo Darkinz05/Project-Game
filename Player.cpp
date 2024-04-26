@@ -309,11 +309,28 @@ void Player::Interaction2(Boss2 &boss2)
 		//cout<<boss2.frame_eff_<<"\n";
 		if(boss2.status_ == Boss2::SLAM && boss2.frame_eff_ >= 2*10 - 1)// const
 		{
-			SDL_Rect box = {boss2.x_pos_ + 60 + 90, boss2.y_pos_ + 60 + 25, 180, 302};
-			if(overlap(Box(), box)) get_hit = 1;
+			if(boss2.phase == 1)
+			{
+				SDL_Rect box = {boss2.x_pos_ + 60 + 90, boss2.y_pos_ + 60 + 25, 180, 302};
+				if(overlap(Box(), box)) get_hit = 1;
 
-			box = {boss2.x_pos_ + 60 + 18, boss2.y_pos_ + 60 + 105, 323, 142};
-			if(overlap(Box(), box)) get_hit = 1;
+				box = {boss2.x_pos_ + 60 + 18, boss2.y_pos_ + 60 + 105, 323, 142};
+				if(overlap(Box(), box)) get_hit = 1;
+			}
+			else
+			{
+				SDL_Rect box = {boss2.x_pos_ + 10 + 90, boss2.y_pos_ + 60 + 25, 180, 302};
+				if(overlap(Box(), box)) get_hit = 1;
+
+				box = {boss2.x_pos_ + 10 + 18, boss2.y_pos_ + 60 + 105, 323, 142};
+				if(overlap(Box(), box)) get_hit = 1;
+
+				box = {boss2.x_pos_ + 110 + 90, boss2.y_pos_ + 60 + 25, 180, 302};
+				if(overlap(Box(), box)) get_hit = 1;
+
+				box = {boss2.x_pos_ + 110 + 18, boss2.y_pos_ + 60 + 105, 323, 142};
+				if(overlap(Box(), box)) get_hit = 1;
+			}
 		}
 
 		for(Bullet bullet: boss2.bullet_list)

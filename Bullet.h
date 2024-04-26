@@ -41,6 +41,7 @@ public:
 	bool is_move;
 	int dir;
 	int change;
+	string name;
 
 	int map_x_;
 	int map_y_;

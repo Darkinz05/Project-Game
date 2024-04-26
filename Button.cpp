@@ -5,6 +5,7 @@ Button::Button()
 	is_hovered = 0;
 	press = 0;
 	advance = 0;
+	lock = 0;
 }
 
 Button::~Button()
@@ -51,7 +52,8 @@ void Button::Show(SDL_Renderer* des, TTF_Font* font, int type, string text)
 	}
 	else if(type == 2)
 	{
-		if(is_hovered == 0)
+		if(lock) text = text + "-lock.png";
+		else if(is_hovered == 0)
 		{
 			text = text + ".png";
 		}
@@ -59,6 +61,7 @@ void Button::Show(SDL_Renderer* des, TTF_Font* font, int type, string text)
 		{
 			text = text + "-hv.png";
 		}
+
 		//cout<<text<<"\n";
 		BaseObject::LoadImg(text, des);
 	}
