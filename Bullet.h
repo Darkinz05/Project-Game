@@ -40,6 +40,7 @@ public:
 	int box_x, box_y, box_w, box_h;
 	bool is_move;
 	int dir;
+	int change;
 
 	int map_x_;
 	int map_y_;

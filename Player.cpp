@@ -316,6 +316,11 @@ void Player::Interaction2(Boss2 &boss2)
 			if(overlap(Box(), box)) get_hit = 1;
 		}
 
+		for(Bullet bullet: boss2.bullet_list)
+		{
+			if(overlap(Box(), bullet.Box())) get_hit = 1;
+		}
+
 		if(get_hit && health > 0)
 		{
 			health--;

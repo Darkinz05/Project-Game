@@ -28,6 +28,7 @@ Mix_Music* boss1_music = NULL;
 Mix_Music* boss2_music = NULL;
 
 Mix_Chunk* dead_sfx = NULL;
+Mix_Chunk* win_sfx = NULL;
 Mix_Chunk* menu_sfx = NULL;
 Mix_Chunk* player_hit = NULL;
 Mix_Chunk* player_miss = NULL;
@@ -138,6 +139,7 @@ bool LoadMedia()
 	boss2_music = Mix_LoadMUS("menu/boss2_mus.ogg");
 
 	dead_sfx = Mix_LoadWAV("sfx/death_scene.wav");
+	win_sfx = Mix_LoadWAV("sfx/you_win.wav");
 	menu_sfx = Mix_LoadWAV("sfx/menu_button.wav");
 	player_hit = Mix_LoadWAV("sfx/player_hit.wav");
 	player_miss = Mix_LoadWAV("sfx/player_miss.wav");
@@ -864,6 +866,8 @@ int main(int argc, char *argv[])
 			{
 				if(d_started == 0)
 				{
+					Mix_HaltMusic();
+					Mix_PlayChannel(-1, win_sfx, 0);
 					d_frame = 0;
 					d_opa = 0;
 					d_opa_ann = 0;
@@ -875,8 +879,27 @@ int main(int argc, char *argv[])
 				SDL_SetRenderDrawColor(g_screen, 0, 0, 0, d_opa);
 				SDL_Rect box = {0,0,SCREEN_WIDTH,SCREEN_HEIGHT};
 				SDL_RenderFillRect(g_screen, &box);
-				if(d_frame == 100)
+//				if(d_frame == 100)
+//				{
+//					Mix_PlayMusic(title_music, -1);
+//					scene = SELECT;
+//					d_started = 0;
+//				}
+				if(d_frame >= 80)
 				{
+					d_opa_ann+=6;
+					if(d_opa_ann>255) d_opa_ann = 255;
+				}
+				BaseObject dead_an;
+				SDL_Color Yellow = {244,255,0};
+				dead_an.LoadTTF("YOU WIN!", g_screen, announce_font, Yellow);
+				dead_an.SetPos(350,200);
+				SDL_SetTextureAlphaMod(dead_an.p_object_, d_opa_ann);
+				dead_an.Render(g_screen);
+
+				if(d_frame == 200)
+				{
+					Mix_HaltChannel(-1);
 					Mix_PlayMusic(title_music, -1);
 					scene = SELECT;
 					d_started = 0;

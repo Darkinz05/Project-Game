@@ -8,7 +8,7 @@
 #define BOSS_CAP_SPEED 20
 #define BOSS_SPEED 6
 
-const int num_sprite2[]={4,10,1,1,1,14};
+const int num_sprite2[]={4,10,4,4,9,14};
 class Player;
 class Bullet;
 class Boss2: public BaseObject
@@ -25,6 +25,9 @@ public:
 	{
 		IDLE = 0,
 		SLAM = 1,
+		MOVE1 = 2,
+		MOVE2 = 3,
+		SHOOT1 = 4,
 		DEATH = 5
 	};
 	SDL_Rect Box()
@@ -53,6 +56,12 @@ public:
 	float y_val_;
 	float x_pos_;
 	float y_pos_;
+
+	float x_des_;
+	float y_des_;
+	pair<float, float> vec;
+	int reached;
+	int hades;
 
 	int width_frame_;
 	int height_frame_;

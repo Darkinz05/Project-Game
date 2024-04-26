@@ -9,6 +9,7 @@ Bullet::Bullet()
 	y_pos_ = 0;
 	is_move = false;
 	dir = BLEFT;
+	change = 0;
 	box_x = box_y = box_w = box_h = 0;
 
 	map_x_ = 0;
@@ -54,6 +55,7 @@ void Bullet::Show(SDL_Renderer* des, int type)
 	}
 	string path = "map/Boss1/Boss-bullet-" + to_string(frame_cur_/5) + ".png";
 	if(type == 2) path = "map/Boss1/Boss-bullet2-" + to_string(frame_cur_/5) + ".png";
+	if(type == 3) path = "map/Boss2/bullet.png";
 	LoadImg(path, des);
 	rect_.x = x_pos_ - map_x_;
 	rect_.y = y_pos_ - map_y_;

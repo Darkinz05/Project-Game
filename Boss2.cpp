@@ -9,8 +9,17 @@ extern Mix_Chunk* player_hit;
 extern Mix_Chunk* player_miss;
 extern Mix_Chunk* boss1_attack;
 extern Mix_Chunk* boss1_death;
-
 extern bool paused;
+pair<float, float> calculateDir(float fromX, float fromY, float toX, float toY)
+{
+    float dx = toX - fromX;
+    float dy = toY - fromY;
+    float length = sqrt(dx * dx + dy * dy);
+    pair<float, float> direction;
+    direction.first = (dx / length);
+    direction.second = (dy / length);
+    return direction;
+}
 Boss2::Boss2()
 {
 	frame_cur_ = 0;
@@ -19,6 +28,8 @@ Boss2::Boss2()
 	y_pos_ = 112;
 	x_val_ = 0;
 	y_val_ = 0;
+	reached = 0;
+	hades = 0;
 	width_frame_ = 0;
 	height_frame_ = 0;
 	status_ = 0;
@@ -28,7 +39,7 @@ Boss2::Boss2()
 	melee = 0;
 	global_search = 0;
 	rest_time = 2;
-	can_shoot = 0;
+	can_shoot = 1;
 	num_bullet = 3;
 	active_punch = 0;
 	health = 30;
@@ -41,10 +52,12 @@ Boss2::Boss2()
 	map_x_ = 0;
 	map_y_ = 0;
 }
+
 Boss2::~Boss2()
 {
 
 }
+
 void Boss2::Reset()
 {
 	Boss2 tmp;
@@ -53,7 +66,10 @@ void Boss2::Reset()
 
 void Boss2::AdvanceState()
 {
-	status_ = rnd(1,1);
+	status_ = rnd(1,2);
+
+	hades = 0;
+	can_shoot = 1;
 	spell_time = 0;
 	global_search = 0;
 }
@@ -112,6 +128,78 @@ void Boss2::Show(SDL_Renderer* des)
 		string path = "map/Boss2/Boss-slam-" + to_string(min(9,frame_cur_/5)) + ".png";
 		LoadImg(path, des);
 	}
+	else if(status_ == MOVE1)
+	{
+
+	}
+	else if(status_ == SHOOT1)
+	{
+		if(frame_cur_ == 3*num_sprite2[status_])
+		{
+			frame_cur_ = 3*num_sprite2[status_]-1;
+			if(can_shoot == 1)
+			{
+				Bullet blet;
+				blet.LoadImg("map/Boss2/bullet.png", des);
+				blet.x_val_ = rnd(25, 35);
+				if(save_dir == LEFT)
+				{
+					blet.dir = Bullet::BLEFT;
+					blet.SetForBox(0,0,blet.rect_.w,blet.rect_.h);
+					blet.x_pos_ = rect_.x - blet.Box().w - 30;
+					blet.y_pos_ = rect_.y + 160;
+				}
+				else if(save_dir == RIGHT)
+				{
+					blet.dir = Bullet::BRIGHT;
+					blet.SetForBox(0,0,blet.rect_.w,blet.rect_.h);
+					blet.x_pos_ = rect_.x + rect_.w - 100;
+					blet.y_pos_ = rect_.y + 160;
+				}
+				blet.is_move = 1;
+				bullet_list.push_back(blet);
+				can_shoot = 0;
+			}
+		}
+		for(int i=(int)bullet_list.size()-1; i>=0; --i)
+		{
+			Bullet *x = &bullet_list[i];
+			if(x->change && x->dir == Bullet::BLEFT && x->x_pos_ <= x_pos_ + rect_.w - 100)
+			{
+				x->is_move = 0;
+				status_ = MOVE2;
+				x_des_ = 700;
+				y_des_ = 112;
+				vec = calculateDir(rect_.x, rect_.y, x_des_, y_des_);
+				reached = 0;
+				//cout<<2222;
+			}
+			else if(x->change && x->dir == Bullet::BRIGHT && x->x_pos_ >= x_pos_)
+			{
+				x->is_move = 0;
+				status_ = MOVE2;
+
+				{
+				x_des_ = 700;
+				y_des_ = 112;
+				vec = calculateDir(rect_.x, rect_.y, x_des_, y_des_);
+				reached = 0;
+				}
+			}
+		}
+
+		string path = "map/Boss2/Boss-shoot1-" + to_string(frame_cur_/3) + ".png";
+		LoadImg(path, des);
+
+//		if(bullet_list.size() == 0)
+//		{
+//			status_ = MOVE2;
+//		}
+	}
+	else if(status_ == MOVE2)
+	{
+
+	}
 	ShowEffect(des);
 	int tmp = 0;
 
@@ -123,7 +211,56 @@ void Boss2::Show(SDL_Renderer* des)
 	if(save_dir == RIGHT) flip_type = SDL_FLIP_HORIZONTAL;
 	SDL_RenderCopyEx(des, p_object_, NULL, &renderQuad, 0, NULL, flip_type);
 
-//	ShowBullet(des);
+	ShowBullet(des);
+}
+void Boss2::ShowBullet(SDL_Renderer* des)
+{
+	for(int i=(int)bullet_list.size()-1; i>=0; --i)
+	{
+		Bullet *x = &bullet_list[i];
+
+		if(x->is_move)
+		{
+			int type = 0;
+			if(x->dir == Bullet::BLEFT || x->dir == Bullet::BRIGHT) type = 0;
+			else type = 2;
+			type = 3;
+			if(paused == 0) x->Move();
+			x->Show(des, type);
+
+		}
+		else
+		{
+			if(x->dir == Bullet::BLEFT && x->change == 0)
+			{
+				Bullet blet;
+				blet.LoadImg("map/Boss2/bullet.png", des);
+				blet.x_val_ = x->x_val_;
+				blet.dir = Bullet::BRIGHT;
+				blet.SetForBox(0,0,blet.rect_.w,blet.rect_.h);
+				blet.x_pos_ = -50;
+				blet.y_pos_ = x->y_pos_;
+				blet.change = 1;
+				blet.is_move = 1;
+				bullet_list.push_back(blet);
+
+			}
+			else if(x->dir == Bullet::BRIGHT && x->change == 0)
+			{
+				Bullet blet;
+				blet.LoadImg("map/Boss2/bullet.png", des);
+				blet.x_val_ = x->x_val_;
+				blet.dir = Bullet::BLEFT;
+				blet.SetForBox(0,0,blet.rect_.w,blet.rect_.h);
+				blet.x_pos_ = SCREEN_WIDTH + 50;
+				blet.y_pos_ = x->y_pos_;
+				blet.change = 1;
+				blet.is_move = 1;
+				bullet_list.push_back(blet);
+			}
+			bullet_list.erase(bullet_list.begin() + i);
+		}
+	}
 }
 void Boss2::ShowEffect(SDL_Renderer* des)
 {
@@ -198,10 +335,22 @@ void Boss2::DoBoss(Map& map_data, Player& player, SDL_Renderer* des)
 {
 	if(health <= 0) status_ = DEATH;
 	if(player.status_ == Player::DEATH) status_ = IDLE;
+	if(status_ == MOVE1 && hades == 0)
+	{
+		x_des_ = rnd(0,1) ? 900 : 0;
+		y_des_ = rnd(0,3);
+		if(y_des_ <= 1)
+		{
+			y_des_ = rnd(150, 170);
+		}
+		else y_des_ = rnd(150, 170);
+		vec = calculateDir(rect_.x, rect_.y, x_des_, y_des_);
+		hades = 1;
+	}
 	x_val_ = 0;
 	y_val_ = 0;
 	if(status_ == IDLE)
-	{
+	{hades = 0;
 		if(save_dir == LEFT) x_val_ = -BOSS_SPEED;
 		else x_val_ = BOSS_SPEED;
 	}
@@ -211,9 +360,55 @@ void Boss2::DoBoss(Map& map_data, Player& player, SDL_Renderer* des)
 		y_val_ = 0;
 	}
 	else if(status_ == SLAM)
-	{
+	{hades = 0;
 		if(save_dir == LEFT) x_val_ = -BOSS_SPEED;
 		else x_val_ = BOSS_SPEED;
+	}
+	else if(status_ == MOVE1)
+	{
+		//cout<<"x22 "<<vec.first<<" "<<vec.second<<"\n";
+		x_val_ += vec.first*20;//speed
+		y_val_ += vec.second*20;
+
+		//cout<<x_val_<<" "<<y_val_<<"\n";
+		if(x_val_ < 0) save_dir = LEFT;
+		else save_dir = RIGHT;
+		//cout<<x_des_<<" "<<y_des_<<"\n";
+	}
+	else if(status_ == MOVE2)
+	{
+		if(reached == 0)
+		{
+			float dx = x_des_ - rect_.x;
+            float dy = y_des_ - rect_.y;
+            float length = std::sqrt(dx * dx + dy * dy);
+            //cout<<x_des_<<" "<<rect_.x<<"   "<<dx<<" "<<dy<<" "<<length<<"\n";
+            if(length <= 20)
+			{
+				reached = 1;
+				x_val_ = 0;
+				y_val_ = 0;
+				x_pos_ = x_des_;
+				y_pos_ = y_des_;
+			}
+			else
+			{
+				float directionX = dx / length;
+                float directionY = dy / length;
+                x_val_ += directionX*20;
+                y_val_ += directionY*20;
+			}
+		}
+		else
+		{
+			hades = 0;
+			status_ = IDLE;
+			rest_time = rnd(2,3);
+			melee = 0;
+		}
+		if(x_val_ < 0) save_dir = LEFT;
+		else save_dir = RIGHT;
+		//cout<<x_val_<<" "<<y_val_<<"\n";
 	}
 	CheckColli(map_data);
 }
@@ -225,9 +420,11 @@ void Boss2::CheckColli(Map& map_data)
 	{
 		x_pos_ = 0 - 178;
 		save_dir = RIGHT;
+		if(status_ == MOVE1) status_ = SHOOT1;
 	}
 	else if(x_pos_ + rect_.w - 100 > map_data.max_x_)
 	{
+		if(status_ == MOVE1) status_ = SHOOT1;
 		save_dir = LEFT;
 		x_pos_ = map_data.max_x_ - rect_.w + 99 ;// max x la diem pixel cuoi cuar map
 	}
