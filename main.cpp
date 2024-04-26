@@ -914,7 +914,7 @@ int main(int argc, char *argv[])
 					home_button.SetPos(290, 19);
 					home_button.Show(g_screen,NULL,2,"menu/home_button");
 
-					sound_button.SetPos(100, 20);
+					sound_button.SetPos(370, 19);
 					sound_button.Show(g_screen,NULL,2,"menu/sound_button");
 				}
 				else
