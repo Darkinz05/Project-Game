@@ -35,7 +35,7 @@ Bắt đầu trò chơi sẽ là menu như dưới hình:
 - Reset: Làm mới tiến trình chơi
 <div style="text-align: center;">
 
-![image](preview/menu.png)
+![image](Preview/menu.png)
 
 </div>
 
@@ -44,30 +44,30 @@ Bắt đầu trò chơi sẽ là menu như dưới hình:
 - Level 2: Khu vực hang, là lãnh địa của Stone Golem. Level 2 ban đầu sẽ bị khóa, người chơi cần vượt qua level 1 để có thể mở khóa level 2.
 <div style="text-align: center;">
 
-![image](preview/menu_select.png)
+![image](Preview/menu_select.png)
 
 </div>
 
 # 2. Các thành phần trong game
 
-- Player ![image](res/preview/player.png): nhân vật của bạn
-- Boss Frost Guardian ![image](res/preview/boss1.png): Boss 1, là một người tuyết khổng lồ sống một mình trong lều tuyết, tập gym hàng ngày nên có một cơ thể rất to.
-- Boss Stone Golem ![image](res/preview/boss2.png): Boss 2, là một thực thể năng lượng huyền bí bị giằng xé trong những mảnh vỡ thiên thạch.
+- Player ![image](res/Preview/player.png): nhân vật của bạn
+- Boss Frost Guardian ![image](res/Preview/boss1.png): Boss 1, là một người tuyết khổng lồ sống một mình trong lều tuyết, tập gym hàng ngày nên có một cơ thể rất to.
+- Boss Stone Golem ![image](res/Preview/boss2.png): Boss 2, là một thực thể năng lượng huyền bí bị giằng xé trong những mảnh vỡ thiên thạch.
 - Ngoài ra, còn có những vật thể khác do Boss tạo ra để tấn công bạn. Hãy cẩn thận!
 - Hệ thống thành tựu:
 
 <div style="text-align: center;">
 
-![image](preview/menu_ach.png)
+![image](Preview/menu_ach.png)
 
 </div>
 
-- Nút Home ![image](res/preview/home.png): dùng để pause hoặc quay về menu.
-- Nút Âm thanh ![image](res/preview/sound.png): dùng để tắt/bật âm thanh
+- Nút Home ![image](res/Preview/home.png): dùng để pause hoặc quay về menu.
+- Nút Âm thanh ![image](res/Preview/sound.png): dùng để tắt/bật âm thanh
 - Bố cục game cơ bản:
 <div style="text-align: center;">
 
-![image](preview/preview.png)
+![image](Preview/preview.png)
 
 </div>
 
@@ -102,7 +102,7 @@ Dưới đây là đặc điểm của từng boss
 Đánh bại boss và thu thập linh hồn của chúng, bạn sẽ chiến thắng.
 <div style="text-align: center;">
 
-![image](preview/win.png)
+![image](Preview/win.png)
 
 </div>
 
@@ -110,7 +110,7 @@ Nếu bạn hết máu, bạn sẽ thua.
 
 <div style="text-align: center;">
 
-![image](preview/lose.png)
+![image](Preview/lose.png)
 
 </div>
 
