@@ -52,6 +52,7 @@ void BaseObject::Show(SDL_Renderer* des)
 
 	SDL_RenderCopyEx(des, p_object_, NULL, &renderQuad, 0, NULL, flip_type);
 }
+
 bool BaseObject::LoadTTF(std::string text, SDL_Renderer* screen, TTF_Font* font, SDL_Color text_color)
 {
 	Free();
