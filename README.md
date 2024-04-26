@@ -50,9 +50,9 @@ Bắt đầu trò chơi sẽ là menu như dưới hình:
 
 # 2. Các thành phần trong game
 
-- Player ![image](res/Preview/player.png): nhân vật của bạn
-- Boss Frost Guardian ![image](res/Preview/boss1.png): Boss 1, là một người tuyết khổng lồ sống một mình trong lều tuyết, tập gym hàng ngày nên có một cơ thể rất to.
-- Boss Stone Golem ![image](res/Preview/boss2.png): Boss 2, là một thực thể năng lượng huyền bí bị giằng xé trong những mảnh vỡ thiên thạch.
+- Player ![image](Preview/player.png): nhân vật của bạn
+- Boss Frost Guardian ![image](Preview/boss1.png): Boss 1, là một người tuyết khổng lồ sống một mình trong lều tuyết, tập gym hàng ngày nên có một cơ thể rất to.
+- Boss Stone Golem ![image](Preview/boss2.png): Boss 2, là một thực thể năng lượng huyền bí bị giằng xé trong những mảnh vỡ thiên thạch.
 - Ngoài ra, còn có những vật thể khác do Boss tạo ra để tấn công bạn. Hãy cẩn thận!
 - Hệ thống thành tựu:
 
@@ -62,8 +62,8 @@ Bắt đầu trò chơi sẽ là menu như dưới hình:
 
 </div>
 
-- Nút Home ![image](res/Preview/home.png): dùng để pause hoặc quay về menu.
-- Nút Âm thanh ![image](res/Preview/sound.png): dùng để tắt/bật âm thanh
+- Nút Home ![image](Preview/home.png): dùng để pause hoặc quay về menu.
+- Nút Âm thanh ![image](Preview/sound.png): dùng để tắt/bật âm thanh
 - Bố cục game cơ bản:
 <div style="text-align: center;">
 
