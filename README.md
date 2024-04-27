@@ -48,6 +48,7 @@ Bắt đầu trò chơi sẽ là menu như dưới hình:
 
 </div>
 
+
 # 2. Các thành phần trong game
 
 - Player ![image](Preview/player.png): nhân vật của bạn
@@ -71,15 +72,22 @@ Bắt đầu trò chơi sẽ là menu như dưới hình:
 
 </div>
 
+<div style="text-align: center;">
+
+![image](Preview/preview-2.png)
+
+</div>
 # 3. Cách chơi
 
 Bạn có thể học cách chơi trong game thông qua Tutorial.
 
-Sử dụng phím A để sang trái và phím D để sang phải.
+Sử dụng phím A để sang trái và phím D để sang phải. ![ezgif com-video-to-gif](Preview/A.gif) ![ezgif com-video-to-gif](Preview/D.gif)
 
-Sử dụng phím W để nhảy. Giữ W để nhảy cao hơn.
+Sử dụng phím W để nhảy. Giữ W để nhảy cao hơn. ![ezgif com-video-to-gif](Preview/W.gif)
 
-Sử dụng phím J để đánh thường. Phím K để lướt một đoạn.
+Sử dụng phím J để đánh thường. ![ezgif com-video-to-gif](Preview/J.gif)
+
+Phím K để lướt một đoạn. ![ezgif com-video-to-gif](Preview/K.gif)
 
 Mục tiêu của bạn là đánh cho Boss về 0 máu và bạn sẽ dành chiến thắng. Ngược lại, nếu bạn hết máu bạn thua.
 
@@ -136,3 +144,18 @@ Cảm ơn mọi người vì đã cung cấp những nguồn tài nguyên miễn
 
 Mình có tham khảo và sử dụng code của kênh Youtube: https://www.youtube.com/@PhatTrienPhanMem123AZ vào các file CommonFunc, BaseObject, Player, GameMap,... và học được cách xây dựng tương tác với Map cho Player.
 Các file còn lại đều là mình tự code và phát triển.
+
+- CommonFunc(.h/.cpp) : include các thư viện SDL2, define các constant, một vài struct.
+- BaseObject(.h/.cpp) : tạo class BaseObject để xử lí các vấn đề về phần hình ảnh cho cả image và ttf. Những class có hình ảnh sẽ đều được kế thừa từ BaseObject.
+- Boss1(.h/.cpp) : tạo class Boss1. Trong này xử lí logic cho Boss1 bao gồm: di chuyển, hitbox, đạn bắn, hoạt ảnh, chuyển trạng thái, tương tác với Player/Map...
+- Boss2(.h/.cpp) : tương tự như Boss1 nhưng vài phần xử lí sẽ khác.
+- Bullet(.h/.cpp) : tạo class Bullet. Xử lí di chuyển của đạn, xóa đạn, vẽ đạn.
+- Button(.h/.cpp) : tạo class Button. Làm các công việc xử lí event cho nút, vẽ nút.
+
+- GameMap(.h/.cpp) : tạo class GameMap. Có chức năng vẽ map.
+
+- Player(.h./.cpp) : tạo class Player. Xử lí logic cho player bao gồm: di chuyển, hitbox, hoạt ảnh, chuyển trạng, xử lí sự kiện, tương tác với các boss,
+- Timer(.h/.cpp) : tạo class Timer. Chủ yếu để giới hạn fps.
+- main.cpp: chứa xử lí chính của game.
+
+
