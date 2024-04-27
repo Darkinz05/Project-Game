@@ -87,16 +87,16 @@ Dưới đây là đặc điểm của từng boss
 
 **Boss 1**
 - Frost Guardian sẽ có 3 cách tấn công chính:
-    - Tìm kiếm và tung nắm đấm.![ezgif com-video-to-gif](Preview/boss1-1.gif)
-    - Đấm ra một đạn băng về phía bạn.![ezgif com-video-to-gif](Preview/ice.gif)
-    - Bắn 3 cột băng lên trời và nó sẽ rơi xuống đầu bạn.![ezgif com-video-to-gif](Preview/boss1-3.gif)
+    - Tìm kiếm và tung nắm đấm.![ezgif com-video-to-gif](preview/boss1-1.gif)
+    - Đấm ra một đạn băng về phía bạn.![ezgif com-video-to-gif](preview/ice.gif)
+    - Bắn 3 cột băng lên trời và nó sẽ rơi xuống đầu bạn.![ezgif com-video-to-gif](preview/boss1-3.gif)
 
 **Boss 2**
 - Stone Golem cũng có 3 cách tấn công chính:
-    - Tạo xung điện trường gây sát thương quanh bản thân![ezgif com-video-to-gif](Preview/boss2-1.gif)
-    - Bay về một phía và bắn bàn tay hỏa tiễn về phía bạn. Lưu ý, bàn tay hỏa tiễn sau một đoạn sẽ quay ngược về vị trí cũ.![ezgif com-video-to-gif](Preview/boss2-2.gif)
-    - Bao bọc bản thân bằng lớp giáp kiên cố. Trong thời gian này, Stone Golem sẽ tạo rung chấn làm cho các lớp đá trong hang rơi xuống. Lưu ý, nếu bạn tấn công Stone Golem, hắn sẽ hồi máu.![ezgif com-video-to-gif](Preview/boss2-3.gif)
-- Đặc biệt, Stone Golem có 2 dạng. Hắn sẽ chuyển dạng sau khi mất đi nửa số sinh mệnh. Lúc này hắn sẽ vô cùng nguy hiểm.![ezgif com-video-to-gif](Preview/boss2-x.gif)
+    - Tạo xung điện trường gây sát thương quanh bản thân![ezgif com-video-to-gif](preview/boss2-1.gif)
+    - Bay về một phía và bắn bàn tay hỏa tiễn về phía bạn. Lưu ý, bàn tay hỏa tiễn sau một đoạn sẽ quay ngược về vị trí cũ.![ezgif com-video-to-gif](preview/boss2-2.gif)
+    - Bao bọc bản thân bằng lớp giáp kiên cố. Trong thời gian này, Stone Golem sẽ tạo rung chấn làm cho các lớp đá trong hang rơi xuống. Lưu ý, nếu bạn tấn công Stone Golem, hắn sẽ hồi máu.![ezgif com-video-to-gif](preview/boss2-3.gif)
+- Đặc biệt, Stone Golem có 2 dạng. Hắn sẽ chuyển dạng sau khi mất đi nửa số sinh mệnh. Lúc này hắn sẽ vô cùng nguy hiểm.![ezgif com-video-to-gif](preview/boss2-x.gif)
 
 # 4. Chiến thắng và thất bại
 Đánh bại boss và thu thập linh hồn của chúng, bạn sẽ chiến thắng.
