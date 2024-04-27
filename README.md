@@ -87,16 +87,16 @@ Dưới đây là đặc điểm của từng boss
 
 **Boss 1**
 - Frost Guardian sẽ có 3 cách tấn công chính:
-    - Tìm kiếm và tung nắm đấm.
-    - Đấm ra một đạn băng về phía bạn.
-    - Bắn 3 cột băng lên trời và nó sẽ rơi xuống đầu bạn.
+    - Tìm kiếm và tung nắm đấm.![image](Preview/boss1-1.gif)
+    - Đấm ra một đạn băng về phía bạn.![image](Preview/ice.gif)
+    - Bắn 3 cột băng lên trời và nó sẽ rơi xuống đầu bạn.![image](Preview/boss1-3.gif)
 
 **Boss 2**
 - Stone Golem cũng có 3 cách tấn công chính:
-    - Tạo xung điện trường gây sát thương quanh bản thân
-    - Bay về một phía và bắn bàn tay hỏa tiễn về phía bạn. Lưu ý, bàn tay hỏa tiễn sau một đoạn sẽ quay ngược về vị trí cũ.
-    - Bao bọc bản thân bằng lớp giáp kiên cố. Trong thời gian này, Stone Golem sẽ tạo rung chấn làm cho các lớp đá trong hang rơi xuống. Lưu ý, nếu bạn tấn công Stone Golem, hắn sẽ hồi máu.
-- Đặc biệt, Stone Golem có 2 dạng. Hắn sẽ chuyển dạng sau khi mất đi nửa số sinh mệnh. Lúc này hắn sẽ vô cùng nguy hiểm.
+    - Tạo xung điện trường gây sát thương quanh bản thân![image](Preview/boss2-1.gif)
+    - Bay về một phía và bắn bàn tay hỏa tiễn về phía bạn. Lưu ý, bàn tay hỏa tiễn sau một đoạn sẽ quay ngược về vị trí cũ.![image](Preview/boss2-2.gif)
+    - Bao bọc bản thân bằng lớp giáp kiên cố. Trong thời gian này, Stone Golem sẽ tạo rung chấn làm cho các lớp đá trong hang rơi xuống. Lưu ý, nếu bạn tấn công Stone Golem, hắn sẽ hồi máu.![image](Preview/boss2-3.gif)
+- Đặc biệt, Stone Golem có 2 dạng. Hắn sẽ chuyển dạng sau khi mất đi nửa số sinh mệnh. Lúc này hắn sẽ vô cùng nguy hiểm.![image](Preview/boss2-x.gif)
 
 # 4. Chiến thắng và thất bại
 Đánh bại boss và thu thập linh hồn của chúng, bạn sẽ chiến thắng.
@@ -120,13 +120,19 @@ Nếu bạn hết máu, bạn sẽ thua.
 - Boss 1 : https://chierit.itch.io/
 - Boss 2 : https://darkpixel-kronovi.itch.io/
 - Dummy  : https://elthen.itch.io/
-Thanks for providing free useful resources.
+- Hình nền được lấy từ các tựa game: Eldest Souls, Cuphead,...
+- Các tileset cho map:
+
+    - https://atari-boy.itch.io/snow-platform-pack
+    - https://brullov.itch.io/oak-woods
+
+
+Cảm ơn mọi người vì đã cung cấp những nguồn tài nguyên miễn phí và quý giá.
 ### Về nhạc nền:
 - Menu : The Legend of Zelda (Main theme).
 - Map 1: Hollow Knight's Nightmare King.
 - Map 2: Hollow Knight's Sisters of Battle.
 ### Về source code:
 
-Mình có tham khảo và sử dụng code của kênh Youtube: https://www.youtube.com/@PhatTrienPhanMem123AZ vào các file CommonFunc, BaseObject, Bullet,... và học được cách xây dựng tương tác với Map cho Player.
+Mình có tham khảo và sử dụng code của kênh Youtube: https://www.youtube.com/@PhatTrienPhanMem123AZ vào các file CommonFunc, BaseObject, Player, GameMap,... và học được cách xây dựng tương tác với Map cho Player.
 Các file còn lại đều là mình tự code và phát triển.
-

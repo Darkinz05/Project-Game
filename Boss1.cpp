@@ -360,6 +360,7 @@ void Boss1::DoBoss(Map& map_data, Player& player, SDL_Renderer* des)
 	}
 
 }
+
 void Boss1::CheckColli(Map& map_data)
 {
 	int x1 = 0, x2 = 0;
@@ -444,6 +445,7 @@ void Boss1::CheckColli(Map& map_data)
 		x_pos_ = map_data.max_x_ - rect_.w - 1 ;// max x la diem pixel cuoi cuar map
 	}
 }
+
 void Boss1::SetMapXY(const int map_x, const int map_y)
 {
 	map_x_ = map_x; map_y_ = map_y;

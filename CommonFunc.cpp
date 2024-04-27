@@ -5,6 +5,7 @@ int rnd(int l,int r)
 {
     return l+rng()%(r-l+1);
 }
+
 bool overlap(SDL_Rect a, SDL_Rect b)
 {
 	if(a.x > b.x + b.w - 1 || b.x > a.x + a.w -1) return false;

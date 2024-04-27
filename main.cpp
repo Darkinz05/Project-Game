@@ -42,6 +42,7 @@ BaseObject g_background, table_ach;
 
 enum GAMESCENE
 {
+
 	MENU = 0,
 	MAP1 = 1,
 	MAP2 = 2,
@@ -183,8 +184,6 @@ void LoadSelect()
 	g_background.SetRect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT);
 	map1_button.LoadImg("menu/Map1.png", g_screen);
 	map2_button.LoadImg("menu/Map2.png", g_screen);
-
-
 }
 
 BaseObject soul;
@@ -245,14 +244,15 @@ void TurnVolume()
 {
 	if(volume_up == 0)
 	{
-		Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(dead_sfx,MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(menu_sfx,MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(player_hit,MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(player_miss,MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(player_hurt,MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(boss1_attack,MIX_MAX_VOLUME / 2);
-		Mix_VolumeChunk(boss1_death,MIX_MAX_VOLUME);
+		Mix_VolumeMusic(MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(dead_sfx,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(win_sfx,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(menu_sfx,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(player_hit,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(player_miss,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(player_hurt,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(boss1_attack,MIX_MAX_VOLUME / 6);
+		Mix_VolumeChunk(boss1_death,MIX_MAX_VOLUME / 3);
 
 	}
 	else
@@ -1052,11 +1052,12 @@ int main(int argc, char *argv[])
 			}
 			else if(soul_took)
 			{
-				map2_button.lock = 0;
+
 				if(scene == TUTORIAL) ach1_lock = 0;
 				else if(scene == MAP1)
 				{
 					ach2_lock = 0;
+					map2_button.lock = 0;
 					if(player.health == 4) ach4_lock = 0;
 				}
 				else if(scene == MAP2)
@@ -1064,7 +1065,6 @@ int main(int argc, char *argv[])
 					ach3_lock = 0;
 					if(player.health == 4) ach5_lock = 0;
 				}
-
 
 				if(d_started == 0)
 				{

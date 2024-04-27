@@ -332,6 +332,7 @@ void Boss2::ShowBullet(SDL_Renderer* des)
 		}
 	}
 }
+
 void Boss2::ShowEffect(SDL_Renderer* des)
 {
 	if(status_ == SLAM)
@@ -365,6 +366,7 @@ void Boss2::ShowEffect(SDL_Renderer* des)
 	}
 	else st_eff = 0, frame_eff_ = 0;
 }
+
 void Boss2::ShowHealthBar(SDL_Renderer* des, TTF_Font* g_font)
 {
 	BaseObject name;

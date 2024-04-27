@@ -49,6 +49,7 @@ void Bullet::Move(const int x_border, const int y_border)
 void Bullet::Show(SDL_Renderer* des, int type)
 {
 	frame_cur_++;
+
 	if(frame_cur_ == 5*10)
 	{
 		frame_cur_ = 0;
