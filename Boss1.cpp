@@ -26,7 +26,7 @@ Boss1::Boss1()
 	til_next = 0;
 	melee = 0;
 	global_search = 0;
-	rest_time = 1;
+	rest_time = 3;
 	can_shoot = 0;
 	num_bullet = 3;
 	active_punch = 0;
@@ -101,7 +101,7 @@ void Boss1::Show(SDL_Renderer* des)
 		if(frame_cur_ == 3*num_sprite1[status_]-1)
 		{
 			status_ = IDLE;
-			rest_time = rnd(1,3);
+			rest_time = rnd(2,3);
 			melee = 0;
 			//cout<<22323<<"\n";
 		}
@@ -160,7 +160,7 @@ void Boss1::Show(SDL_Renderer* des)
 		if(spell_time == 30)
 		{
 			status_ = IDLE;
-			rest_time = rnd(1,3);
+			rest_time = rnd(2,3);
 		}
 		if(frame_cur_/4 == 4 && can_spell)
 		{

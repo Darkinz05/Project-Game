@@ -1,6 +1,7 @@
 
 # Souls Lite
 - Demo Game: https://drive.google.com/drive/folders/1tLLu-VD7AAYrsk0CF_Vzmhb-YG6pFszk?usp=drive_link
+- Speedrun AA: https://youtu.be/ixLMCKP-cVI
 - Link Github: https://github.com/Darkinz05/Project-Game
 
 # Giới thiệu:

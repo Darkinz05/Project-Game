@@ -424,7 +424,7 @@
 
 1710066933 source:c:\users\dell\documents\code\ltnc\project-game\baseobj.cpp
 
-1714153247 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
+1714154499 source:c:\users\dell\documents\code\ltnc\project-game\main.cpp
 	"CommonFunc.h"
 	"BaseObject.h"
 	"GameMap.h"
@@ -480,7 +480,7 @@
 1714150297 source:c:\users\dell\documents\code\ltnc\project-game\baseobject.cpp
 	"BaseObject.h"
 
-1714064378 c:\users\dell\documents\code\ltnc\project-game\player.h
+1714236438 c:\users\dell\documents\code\ltnc\project-game\player.h
 	"CommonFunc.h"
 	"BaseObject.h"
 
@@ -505,7 +505,7 @@
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1714154088 source:c:\users\dell\documents\code\ltnc\project-game\boss1.cpp
+1714237499 source:c:\users\dell\documents\code\ltnc\project-game\boss1.cpp
 	"Boss1.h"
 	"Player.h"
 	"Bullet.h"
@@ -521,7 +521,7 @@
 	"CommonFunc.h"
 	"BaseObject.h"
 
-1714154088 source:c:\users\dell\documents\code\ltnc\project-game\boss2.cpp
+1714239363 source:c:\users\dell\documents\code\ltnc\project-game\boss2.cpp
 	"Boss2.h"
 	"Player.h"
 	"Bullet.h"

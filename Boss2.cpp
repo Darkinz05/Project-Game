@@ -242,7 +242,7 @@ void Boss2::Show(SDL_Renderer* des)
 		if(spell_time == 4)
 		{
 			spell_time = 0;
-			rest_time = rnd(1,3);
+			rest_time = rnd(2,3);
 			status_ = IDLE;
 		}
 	}
@@ -257,7 +257,7 @@ void Boss2::Show(SDL_Renderer* des)
 		LoadImg(path, des);
 		if(trans == 2)
 		{
-			rest_time = rnd(1,3);
+			rest_time = rnd(2,3);
 			status_ = IDLE;
 		}
 	}
@@ -444,7 +444,7 @@ void Boss2::DoBoss(Map& map_data, Player& player, SDL_Renderer* des)
 		{
 			y_des_ = rnd(150, 170);
 		}
-		else y_des_ = rnd(150, 170);
+		else y_des_ = rnd(250, 280);
 		vec = calculateDir(rect_.x, rect_.y, x_des_, y_des_);
 		hades = 1;
 	}
@@ -525,7 +525,7 @@ void Boss2::DoBoss(Map& map_data, Player& player, SDL_Renderer* des)
 				Bullet blet;
 				blet.name = "map/Boss2/bullet-fall.png";
 				blet.LoadImg("map/Boss2/bullet-fall.png", des);
-				blet.y_val_ = rnd(17,17);
+				blet.y_val_ = rnd(15,15);
 
 				blet.dir = Bullet::BDOWN;
 				blet.SetForBox(0,0,blet.rect_.w,blet.rect_.h);
